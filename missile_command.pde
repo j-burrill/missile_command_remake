@@ -15,6 +15,7 @@ void draw() {
   for (int i = 0; i<lines.size(); i++) { // do the following for each line
     Line l = lines.get(i);
     l.display();
+    l.checkTimer();
     //println("drawing line: starting x: " + a.startX + " starting y: "+ a.startY + " ending x: " + a.endX + " ending y: "+ a.endY);
   }
   for (int i = 0; i<fireballs.size(); i++) { // do the following for each fb in my list
@@ -50,7 +51,7 @@ void keyPressed() { // check what button is pressed
 void drawLine( int x, int y, int endX, int endY) {
   //println("new line made with starting x: " + x + " and y: "+ y);
   lines.add( new Line( x, y ) ); // make a new line in my array
-  drawFireball( endX, endY );
+  //drawFireball( endX, endY ); // draw fireball at the end of the line
 }
 
 void drawFireball(int x, int y) {
@@ -59,48 +60,82 @@ void drawFireball(int x, int y) {
 }
 
 class Line {
-  int startX, startY, finalX, finalY; 
-  int baseX, baseY, endX, endY;
-  int timer;
+   
+  float startingX, startingY, finalX, finalY;
+  float startX=startingX, startY=startingY, endX, endY;
+  int timer = 0;
   color lineC = color(255);
   int lineW = 2;
+  
+  float missileIncrementLength = 15;
+  float missileLength = 20;
+  int missileMoveDelay = 20000;
 
   Line( int ix, int iy ) {
-    baseX=ix;
-    baseY=iy;
-    endX=mouseX;
-    endY=mouseY;
+    startingX=ix;
+    startingY=iy;
+    finalX=mouseX;
+    finalY=mouseY;
   }
 
   void display() {
-    //println("drawing line: starting x: " + startX + " starting y: "+ startY + " ending x: " + endX + " ending y: "+ endY);
-    /*
     
-     first, I get the length of my line
-     
-     
-     */
-    int xDelta = finalX-baseX;
-    int yDelta = finalY-baseY;
-    float lineLength = sqrt( sq(xDelta) + sq(yDelta) );
-    timer = millis() + 100;
 
     stroke(lineC);
     strokeWeight(lineW);
-    line(baseX, baseY, endX, endY);
+    line(startX, startY, endX, endY);
   }
 
-  //void timer() {
-
-  //}
+  void checkTimer() {
+    if ( millis()>timer ) { // move missile every x milliseconds
+      
+      /*
+      startingX: 60.0 startingY: 685.0 finalX: 566.0 finalY: 498.0
+      startX: 14.069918 startY: -5.1997523 endX: 32.829807 endY: -12.132755
+      deltaX_total: 506.0 deltaY_total: -187.0 hypotenuse_total: 539.4488 hypotenuse_missile_inc: 35.0
+      */
+      
+      //float missileIncrementLength = 15;
+      //float missileLength = 20;
+      
+      // this does not work
+      
+      float deltaX_total = finalX - startingX; //506
+      float deltaY_total = finalY - startingY; //-187
+      float hypotenuse_total = sqrt( sq(deltaX_total) + sq(deltaY_total) ); // 539
+      float hypotenuse_missile_inc = missileLength + missileIncrementLength; // 35
+      float deltaX_missile_inc = hypotenuse_missile_inc * ( deltaX_total / hypotenuse_total ); // 32.9
+      float deltaY_missile_inc = hypotenuse_missile_inc * ( deltaY_total / hypotenuse_total ); // -12.1
+      
+      float deltaX_missile = missileLength * ( deltaX_total / hypotenuse_total ); // 18.8
+      float deltaY_missile = missileLength * ( deltaY_total / hypotenuse_total ); // -6.9
+      
+      endX = startX + deltaX_missile_inc; // 92.9
+      endY = startY + deltaY_missile_inc; // 672.9
+      
+      startX = endX - deltaX_missile; // 74.1 
+      startY = endY - deltaY_missile; // 679.8
+      
+      // startX etc is wrong
+        
+        
+      timer = millis() + missileMoveDelay;
+      
+      println();
+      println("startingX: " + startingX + " startingY: " + startingY + " finalX: " + finalX + " finalY: " + finalY);
+      println("startX: " + startX + " startY: " + startY + " endX: " + endX + " endY: " + endY); 
+      println("deltaX_total: " + deltaX_total + " deltaY_total: " + deltaY_total + " hypotenuse_total: " + hypotenuse_total + " hypotenuse_missile_inc: " + hypotenuse_missile_inc );
+      
+//  
+    }
+  }
 }
 
 class Fireball {
   int fbX, fbY;
   int fbLifetime = 4; // adjust how long the fireball stays for
 
-
-  int fbMaxSize = 200;
+  int fbMaxSize = 100;
   int fbSize;
 
   color fbColour = color(255);
