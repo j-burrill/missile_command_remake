@@ -1,11 +1,12 @@
 color lineC = color(255);
 int lineW = 2;
+int cannon1Ammo = 10, cannon2Ammo = 10, cannon3Ammo = 10;
 
 ArrayList<Line> lines = new ArrayList<Line>(); // list of all my lines
 
 
 void setup() {
-  size(800,800);
+  size(800, 800);
 }
 
 void draw() {
@@ -13,48 +14,63 @@ void draw() {
   for (int i = 0; i<lines.size(); i++) { // do the following for each line
     Line a = lines.get(i);
     a.display();
-    println("drawing line: starting x: " + a.startX + " starting y: "+ a.startY + " ending x: " + a.endX + " ending y: "+ a.endY);
+    //println("drawing line: starting x: " + a.startX + " starting y: "+ a.startY + " ending x: " + a.endX + " ending y: "+ a.endY);
   }
-  
-  stroke(0);
-  
+
+  stroke(125, 83, 54);
+  strokeWeight(0);
   fill(125, 83, 54);
   int floorH = 70;
   rect(0, height-floorH, width, floorH); // rectangle for the ground
+
+  drawMoutain(width/2-60, height-floorH);
+  drawMoutain(0, height-floorH);
+  drawMoutain(width-120, height-floorH);
 }
 
 void keyPressed() { // check what button is pressed
   if (key == 'a' || key == '1') {
-    println("a pressed");
-    drawLine(0,0);
+    //println("a pressed");
+    drawLine(width/2, height-115);
   }
   if (key == 's' || key == '2') {
-    
   }
   if (key == 'd' || key == '3') {
-    
   }
 }
 
-void drawLine(int x,int y) {
+void drawLine(int x, int y) {
   //println("new line made with starting x: " + x + " and y: "+ y);
-  lines.add(new Line(x,y));
+  lines.add(new Line(x, y));
 }
 
 class Line {
-  int startX,startY,endX,endY;
-  
+  int startX, startY, endX, endY;
+
   Line(int ix, int iy) {
     startX=ix;
     startY=iy;
     endX=mouseX;
     endY=mouseY;
   }
-  
+
   void display() {
     //println("drawing line: starting x: " + startX + " starting y: "+ startY + " ending x: " + endX + " ending y: "+ endY);
     stroke(lineC);
     strokeWeight(lineW);
     line(startX, startY, endX, endY);
   }
+}
+
+void drawMoutain(int leftX, int bottomY) {
+  int levelH = 15;
+  int levels = 4;
+  int startW = 120;
+  int wDifference = startW/levels; // change these to change mountain dimensions
+  for (int i = levels; i>0; i--) {
+    rect(leftX+(wDifference/2*i), bottomY-(levelH*i), startW-wDifference*i, levelH);
+  }
+}
+
+void fireCannon(int cannonNum) {
 }
