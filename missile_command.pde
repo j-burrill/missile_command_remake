@@ -1,8 +1,8 @@
-color lineC = color(255);
-int lineW = 2;
+
 int cannon1Ammo = 10, cannon2Ammo = 10, cannon3Ammo = 10;
 
 ArrayList<Line> lines = new ArrayList<Line>(); // list of all my lines
+ArrayList<Fireball> fireballs = new ArrayList<Fireball>(); // list of all my fireballs
 
 
 void setup() {
@@ -12,9 +12,14 @@ void setup() {
 void draw() {
   background(0);
   for (int i = 0; i<lines.size(); i++) { // do the following for each line
-    Line a = lines.get(i);
-    a.display();
+    Line l = lines.get(i);
+    l.display();
     //println("drawing line: starting x: " + a.startX + " starting y: "+ a.startY + " ending x: " + a.endX + " ending y: "+ a.endY);
+  }
+  for (int i = 0; i<fireballs.size(); i++) { // do the following for each fb in my list
+    
+    Fireball f = fireballs.get(i);
+    f.display();
   }
 
   stroke(125, 83, 54);
@@ -42,16 +47,24 @@ void keyPressed() { // check what button is pressed
   }
 }
 
-void drawLine(int x, int y) {
+void drawLine( int x, int y , int endX, int endY) {
   //println("new line made with starting x: " + x + " and y: "+ y);
-  lines.add(new Line(x, y)); // make a new line in my array
+  lines.add( new Line( x, y ) ); // make a new line in my array
+  drawFireball( endX, endY );
+}
+
+void drawFireball(int x, int y) {
+  // fireball made
+  fireballs.add( new Fireball( x, y ) );
 }
 
 class Line {
   int startX, startY, endX, endY, finalX, finalY;
   int timer;
+  color lineC = color(255);
+  int lineW = 2;
 
-  Line(int ix, int iy) {
+  Line( int ix, int iy ) {
     startX=ix;
     startY=iy;
     endX=mouseX;
@@ -60,8 +73,15 @@ class Line {
 
   void display() {
     //println("drawing line: starting x: " + startX + " starting y: "+ startY + " ending x: " + endX + " ending y: "+ endY);
+    /*
     
-    float lineLength = sqrt( sq(finalX-startX) + sq(finalY-startY) );
+    first, I get the length of my line
+    
+    
+    */
+    int xDelta = finalX-startX;
+    int yDelta = finalY-startY;
+    float lineLength = sqrt( sq(xDelta) + sq(yDelta) );
     timer = millis() + 100;
     
     stroke(lineC);
@@ -77,19 +97,26 @@ class Line {
 
 class Fireball {
   int fbX, fbY;
-  int fbSize = 40; // adjust max size of fireball
+  int fbMaxSize = 80;
+  int fbSize;
+  int fbLifetime = 1; // adjust how long the fireball stays for
+  color fbColour = color(255);
 
   Fireball(int ix, int iy) {
     fbX = ix;
     fbY = iy;
   }
-
-  //void display() {
-  //  //println("drawing line: starting x: " + startX + " starting y: "+ startY + " ending x: " + endX + " ending y: "+ endY);
-  //  stroke(lineC);
-  //  strokeWeight(lineW);
-  //  line(startX, startY, endX, endY);
-  //}
+  
+  int timer = millis() + fbLifetime*1000;
+  
+  void display() {
+    
+    
+    fbSize = fbMaxSize - ( timer - millis() );
+    
+    fill(fbColour);
+    ellipse(fbX, fbY, fbSize, fbSize);
+  }
 }
 
 void drawMoutain(int leftX, int bottomY) { // this generates the little pyramids the cannons sit on
@@ -103,8 +130,9 @@ void drawMoutain(int leftX, int bottomY) { // this generates the little pyramids
 }
 
 void fireCannon(int cannonNum) { // draws line from specified cannon to mouse coordinates
-  int x = 60+((cannonNum-1)*340);
-  if (mouseY < height-100) {
-    drawLine(x, height-115); 
+  int x = 60+( ( cannonNum-1 ) * 340 );
+  if ( mouseY < height-100 ) {
+    drawLine( x, height-115, mouseX, mouseY );
+    
   }
 }
