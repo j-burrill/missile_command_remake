@@ -1,16 +1,19 @@
 // Justin Burrill
 // Nov 02 2021
-int ammo = 500;
-int[] cannonAmmoCounts = { ammo, ammo, ammo }; // edit ammo for each cannon
-int floorH = 70;
-ArrayList<Line> lines = new ArrayList<Line>(); // list of all my lines
+
+int floorH = 20;
+ArrayList<Missile> missiles = new ArrayList<Missile>(); // list of all my missiles
 ArrayList<Fireball> fireballs = new ArrayList<Fireball>(); // list of all my fireballs
+ArrayList<Cannon> cannons = new ArrayList<Cannon>(); // list of all my fireballs
 int enemyTimer = 0;
 boolean menuOpen = true;
 int score, hscore;
 
 void setup() {
   size(800, 800);
+  for (int i = 0; i<3; i++) {
+    cannons.add( new Cannon( i ) ); // make my cannons
+  }
 }
 
 void draw() {
@@ -25,13 +28,13 @@ void draw() {
   drawMoutain(0, height-floorH);
   drawMoutain(width-120, height-floorH);
 
-  for (int i = 0; i<lines.size(); i++) { // do the following for each line
-    Line l = lines.get(i);
-    if ( l.endX < width) {
+  for (int i = 0; i<missiles.size(); i++) { // do the following for each missile
+    Missile m = missiles.get(i);
+    if ( m.endX < width) {
 
 
-      l.checkTimer(); // move line when it's timer runs out
-      l.display(); // display on each flame
+      m.checkTimer(); // move missile when it's timer runs out
+      m.display(); // display on each flame
     }
     //println("drawing line: starting x: " + a.startX + " starting y: "+ a.startY + " ending x: " + a.endX + " ending y: "+ a.endY);
   }
@@ -39,6 +42,12 @@ void draw() {
     Fireball f = fireballs.get(i);
     f.display();
   }
+
+  for (int i = 0; i<cannons.size(); i++) { // do the following for each fb in my list
+    Cannon c = cannons.get(i);
+    c.display();
+  }
+
 
   if ( millis() > enemyTimer && !menuOpen ) { // spawn enemies every x seconds if menu is closed
     //println("enemytimer ran out");
@@ -52,15 +61,16 @@ void draw() {
     }
     fill(255);
     textSize(30);
-    // width/2-textWidth(str(score))/2
-    // this centers the score to the middle of the screen constantly by getting it's width
+    /*
+      width/2-textWidth(str(score))/2
+      this centers the score to the middle of the screen constantly by getting its width
+    */
     String menutxt = "Click to start...";
     String scoretxt = "Score: " + score;
     String hscoretxt = "Highscore: " + hscore;
-    
+
     text(scoretxt, width/2-textWidth(scoretxt)/2, height/2-35);
     text(hscoretxt, width/2-textWidth(hscoretxt)/2, height/2);
-    
     text(menutxt, width/2-textWidth(menutxt)/2, height/2+35);
   }
 }
@@ -68,23 +78,43 @@ void draw() {
 void keyPressed() { // check what button is pressed
   if (key == 'a' || key == '1') { // player uses these keys to fire the cannons
     //println("a pressed");
-    fireCannon(1);
+    cannons.get(0).fireCannon();
   }
   if (key == 's' || key == '2') {
-    fireCannon(2);
+    cannons.get(1).fireCannon();
   }
   if (key == 'd' || key == '3') {
-    fireCannon(3);
+    cannons.get(2).fireCannon();
   }
 }
 
-void newLine( int x, int y, int fx, int fy, boolean p ) {
+void mousePressed() {
+  if ( menuOpen ) { // when reseting game:
+    menuOpen = false; // close menu
+    score = 0; // reset score
+    enemyTimer = millis() + 2000; // delay before starting
+    for ( int i = 0; i < cannons.size(); i++ ) { // reset ammo
+      Cannon c = cannons.get(i);
+      c.reset();
+    }
+    for ( int i = 0; i < missiles.size(); i++ ) { // kill all the missiles
+      Missile l = missiles.get(i);
+      l.killMissile();
+    }
+    for ( int i = 0; i < fireballs.size(); i++ ) { // kill all the fireballs
+      Fireball f = fireballs.get(i);
+      f.kill();
+    }
+  }
+}
+
+void newMissile( int x, int y, int fx, int fy, boolean p ) {
   //println("new line made with starting x: " + x + " and y: "+ y);
-  lines.add( new Line( x, y, fx, fy, p) ); // make a new line in my array
+  missiles.add( new Missile( x, y, fx, fy, p) ); // make a new missile in my array
 }
 
 void newFireball( int x, int y, int size ) {
-  println("fireball made");
+  //println("fireball made");
   fireballs.add( new Fireball( x, y, size ) ); // make a new object for each fireball and and to array
 }
 
@@ -93,164 +123,7 @@ void newEnemy() {
   int x = int(random(borderOffset, width-borderOffset)); // pick random start pos from the top of the screen
   int targetX = int(random(borderOffset, width-borderOffset)); // pick a random point on the ground to target
 
-  newLine( x, 0, targetX, height, false ); // enemies are just missiles but a bit different
-}
-
-
-class Line {
-  float startingX, startingY, finalX, finalY;
-  float startX, startY, endX, endY;
-  int timer = 0;
-  color lineC = color(255);
-  int lineW = 2;
-
-  float missileIncrementLength = 5; // how much it moves
-  float missileLength = 15; // size of missile
-  int missileMoveDelay = 20; // how often it moves
-
-  boolean playerMissile;
-
-  Line( int ix, int iy, int ifx, int ify, boolean pMissile ) {
-    startingX=ix;
-    startingY=iy;
-    finalX=ifx;
-    finalY=ify;
-    startX=startingX;
-    startY=startingY;
-    playerMissile = pMissile;
-
-    if (!playerMissile) { // missiles from the enemy look and move differently
-      missileIncrementLength = 2;
-      missileLength = 20;
-      missileMoveDelay = 20;
-      lineC = color(235, 164, 143);
-      missileLength = 8;
-    }
-  }
-
-
-  void display() { // draw my missiles
-    stroke(lineC);
-    strokeWeight(lineW);
-    line(startX, startY, endX, endY);
-    checkDestination(); // also check to see if it's reached it destination every frame
-    if ( !playerMissile ) { // if it's an enemy missile, check for collision with fireballs. player missiles aren't affected by the fireballs
-      checkFB();
-    }
-  }
-
-  void checkTimer() {
-    if ( millis()>timer ) { // move missile every x milliseconds
-      update();
-      timer = millis() + missileMoveDelay;
-
-      //
-    }
-  }
-
-  void update() {
-    // this math finds the next position for my line
-    float deltaX_total = finalX - startingX;
-    float deltaY_total = finalY - startingY;
-    float hypotenuse_total = sqrt( sq(deltaX_total) + sq(deltaY_total) ); // pythagoras
-    float hypotenuse_missile_inc = missileLength + missileIncrementLength;
-    float deltaX_missile_inc = hypotenuse_missile_inc * ( deltaX_total / hypotenuse_total );
-    float deltaY_missile_inc = hypotenuse_missile_inc * ( deltaY_total / hypotenuse_total );
-
-    float deltaX_missile = missileLength * ( deltaX_total / hypotenuse_total );
-    float deltaY_missile = missileLength * ( deltaY_total / hypotenuse_total );
-
-    endX = startX + deltaX_missile_inc;
-    endY = startY + deltaY_missile_inc;
-
-    startX = endX - deltaX_missile;
-    startY = endY - deltaY_missile;
-
-    //println();
-    //println("startingX: " + startingX + " startingY: " + startingY + " finalX: " + finalX + " finalY: " + finalY);
-    //println("startX: " + startX + " startY: " + startY + " endX: " + endX + " endY: " + endY);
-    //println("deltaX_total: " + deltaX_total + " deltaY_total: " + deltaY_total + " hypotenuse_total: " + hypotenuse_total + " hypotenuse_missile_inc: " + hypotenuse_missile_inc );
-  }
-
-  void checkDestination() {
-    if ( endY<finalY&&playerMissile ) { // if player missiles
-      //println("missile has reached mark");
-      newFireball( int(endX), int(endY), 100 ); // draw fireball at the end of the line
-      killMissile();
-    } else if (endY>height-floorH && !playerMissile) {
-      println("enemy missile has detonated, you lose");
-      newFireball( int(endX), int(endY), 20 ); // draw fireball at the end of the line
-      killMissile();
-      menuOpen = true;
-    }
-  }
-
-  void checkFB() {
-    for (int i = 0; i<fireballs.size(); i++) { // do the following for each fb in my list
-      // check to see if enemy missile should be destroyed by my fireball
-      Fireball f = fireballs.get(i);
-      float xDelta = f.x - endX;
-      float yDelta = f.y - endY;
-      float totalDelta = sqrt( sq(xDelta) + sq(yDelta) );
-      //println("totalDelta: " + totalDelta + " fireball size: " + f.size);
-      if ( f.size/2 > totalDelta ) { // if missile enters fireball, kill it
-        //println("missile killed by fireball");
-        killMissile();
-        if ( !menuOpen ) {
-          score += 100; // add to score when destroying enemy missile
-        }
-      }
-    }
-  }
-
-  void killMissile() { // if it's off the screen it doesn't get drawn, so this gets rid of it
-    startX = width+100;
-    endX = width+100;
-  }
-}
-
-class Fireball {
-  int x, y;
-  int fbLifetime = 4; // adjust how long the fireball stays for
-
-  int maxSize; // size the ball hits at it's largest
-  int size; // current size
-
-  color fbColour = color(232, 161, 102);
-
-  Fireball(int ix, int iy, int isize) {
-    x = ix;
-    y = iy;
-    maxSize = isize;
-  }
-
-
-  // this controls the balls getting bigger, then growing back smaller 
-  int time = millis() + fbLifetime*1000;
-  int time2 = millis() + fbLifetime*2000;
-  int timeDelta;
-  int timeDelta2;
-
-  void display() {
-    timeDelta = time - millis();
-    timeDelta2 = time2 - millis();
-    if ( timeDelta >= 0 ) {
-      size = maxSize - ( timeDelta / ( fbLifetime*1000 / maxSize ) ); // make ball bigger while it's on the first timer
-    }
-    if ( timeDelta <= 0 ) {
-      size = maxSize/2 + ( timeDelta2 / ( fbLifetime*2000 / maxSize ) ); // make ball smaller while it's on the second timer
-    }
-
-    fill(fbColour);
-    stroke(fbColour);
-    if ( size > 0 ) { // stop drawing the ball when the size hits 0
-      ellipse(x, y, size, size); // 
-    }
-  }
-
-  void kill() {
-    x = width+100; // shove it offscreen so it doesn't affect the game
-  }
+  newMissile( x, 0, targetX, height, false ); // enemies are just missiles but a bit different
 }
 
 void drawMoutain(int leftX, int bottomY) { // this generates the little pyramids the cannons sit on
@@ -260,32 +133,5 @@ void drawMoutain(int leftX, int bottomY) { // this generates the little pyramids
   int wDifference = startW/levels; // change these to change mountain dimensions
   for (int i = levels; i>0; i--) {
     rect(leftX+(wDifference/2*i), bottomY-(levelH*i), startW-wDifference*i, levelH);
-  }
-}
-
-void fireCannon(int cannonNum) { // draws line from specified cannon to mouse coordinates
-  //println("fired cannon");
-  int x = 60+( ( cannonNum-1 ) * 340 ); // defines where the missiles come from
-  if ( mouseY < height-70 && cannonAmmoCounts[cannonNum-1] > 0 && !menuOpen ) { // if your mouse is in the playing area, and you have ammo, and the game is running, fire missile
-    newLine( x, height-115, mouseX, mouseY, true );
-  }
-  cannonAmmoCounts[cannonNum-1]--; // lose one ammo for shooting
-}
-
-void mousePressed() {
-  if ( menuOpen ) { // when reseting game:
-    menuOpen = false; // close menu
-    score = 0; // reset score
-    for ( int i = 0; i < cannonAmmoCounts.length; i++ ) { // reset ammo
-      cannonAmmoCounts[i] = ammo;
-    }
-    for ( int i = 0; i < lines.size(); i++ ) { // kill all the missiles
-      Line l = lines.get(i);
-      l.killMissile();
-    }
-    for ( int i = 0; i < fireballs.size(); i++ ) { // kill all the fireballs
-      Fireball f = fireballs.get(i);
-      f.kill();
-    }
   }
 }
