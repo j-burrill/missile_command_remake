@@ -1,7 +1,8 @@
-// Justin Burrill
-// Nov 02 2021
-// Missile command for the atari recreation
-// 1
+/*
+  Justin Burrill
+ Nov 02 2021
+ Missile command for the Atari recreation
+ */
 
 int floorH = 20;
 ArrayList<Missile> missiles = new ArrayList<Missile>(); // list of all my missiles
@@ -26,13 +27,9 @@ void draw() {
 
   rect(0, height-floorH, width, floorH); // rectangle for the ground
 
-  drawMoutain(width/2-60, height-floorH); // draw my mountains that shoot the missiles
-  drawMoutain(0, height-floorH);
-  drawMoutain(width-120, height-floorH);
-
   for (int i = 0; i<missiles.size(); i++) { // do the following for each missile
     Missile m = missiles.get(i);
-    if ( m.endX < width) {
+    if ( m.missile_end.x < width) { // don't draw if it's outside of the screen, this is important because i kill the missiles by putting them outside
 
 
       m.checkTimer(); // move missile when it's timer runs out
@@ -40,21 +37,21 @@ void draw() {
     }
     //println("drawing line: starting x: " + a.startX + " starting y: "+ a.startY + " ending x: " + a.endX + " ending y: "+ a.endY);
   }
-  for (int i = 0; i<fireballs.size(); i++) { // do the following for each fb in my list
+  for (int i = 0; i<fireballs.size(); i++) { // display all my fireballs each frame
     Fireball f = fireballs.get(i);
     f.display();
   }
 
-  for (int i = 0; i<cannons.size(); i++) { // do the following for each fb in my list
+  for (int i = 0; i<cannons.size(); i++) { // display all my cannons each frame
     Cannon c = cannons.get(i);
     c.display();
   }
 
 
-  if ( millis() > enemyTimer && !menuOpen ) { // spawn enemies every x seconds if menu is closed
+  if ( millis() > enemyTimer && !menuOpen ) { // spawn enemies every x milliseconds if menu is closed
     //println("enemytimer ran out");
     newEnemy();
-    enemyTimer = millis() + 1500;
+    enemyTimer = millis() + 1800;
   }
 
   if ( menuOpen ) {
@@ -65,15 +62,17 @@ void draw() {
     textSize(30);
     /*
       width/2-textWidth(str(score))/2
-      this centers the score to the middle of the screen constantly by getting its width
-    */
-    String menutxt = "Click to start...";
+     this centers the score to the middle of the screen constantly by getting its width
+     */
     String scoretxt = "Score: " + score;
     String hscoretxt = "Highscore: " + hscore;
+    String tutorialtxt = "Use 1,2,3 or A,S,D to fire your missiles";
+    String menutxt = "Click to start...";
 
-    text(scoretxt, width/2-textWidth(scoretxt)/2, height/2-35);
-    text(hscoretxt, width/2-textWidth(hscoretxt)/2, height/2);
-    text(menutxt, width/2-textWidth(menutxt)/2, height/2+35);
+    text(scoretxt, width/2-textWidth(scoretxt)/2, height/2-50);
+    text(hscoretxt, width/2-textWidth(hscoretxt)/2, height/2-16);
+    text(tutorialtxt, width/2-textWidth(tutorialtxt)/2, height/2+16);
+    text(menutxt, width/2-textWidth(menutxt)/2, height/2+50);
   }
 }
 
@@ -95,6 +94,7 @@ void mousePressed() {
     menuOpen = false; // close menu
     score = 0; // reset score
     enemyTimer = millis() + 2000; // delay before starting
+
     for ( int i = 0; i < cannons.size(); i++ ) { // reset ammo
       Cannon c = cannons.get(i);
       c.reset();
@@ -126,14 +126,4 @@ void newEnemy() {
   int targetX = int(random(borderOffset, width-borderOffset)); // pick a random point on the ground to target
 
   newMissile( x, 0, targetX, height, false ); // enemies are just missiles but a bit different
-}
-
-void drawMoutain(int leftX, int bottomY) { // this generates the little pyramids the cannons sit on
-  int levelH = 15;
-  int levels = 4;
-  int startW = 120;
-  int wDifference = startW/levels; // change these to change mountain dimensions
-  for (int i = levels; i>0; i--) {
-    rect(leftX+(wDifference/2*i), bottomY-(levelH*i), startW-wDifference*i, levelH);
-  }
 }

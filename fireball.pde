@@ -1,26 +1,25 @@
+/*
+  this class manages the circles (fireballs) that appear when missiles explode
+ */
+
 class Fireball {
-  int x, y;
+  Point pos;
   int maxSize; // size the ball hits at it's largest
   int fbLifetime;
   int size; // current size
   color fbColour = color(255, 122, 51);
   int time, time2, timeDelta, timeDelta2;
-  
+
   Fireball(int ix, int iy, int isize) {
-    x = ix;
-    y = iy;
+    pos = new Point( ix, iy );
 
     maxSize = isize;
-    fbLifetime = maxSize/30;
+    fbLifetime = maxSize/30; // fireball lifetime is proportionate to its size
 
     // adjust how long the fireball stays for
     time = millis() + fbLifetime*1000;
     time2 = millis() + fbLifetime*2000;
   }
-
-
-  
-
 
   void display() {
 
@@ -37,11 +36,11 @@ class Fireball {
     fill(fbColour);
     stroke(fbColour);
     if ( size > 0 ) { // stop drawing the ball when the size hits 0
-      ellipse(x, y, size, size); //
+      ellipse( pos.x, pos.y, size, size ); //
     }
   }
 
   void kill() {
-    x = width+100; // shove it offscreen so it doesn't affect the game
+    pos.x = width+200; // shove it offscreen so it doesn't affect the game
   }
 }
