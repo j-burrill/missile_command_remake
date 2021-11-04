@@ -14,12 +14,15 @@ void draw() {
   background(0);
   for (int i = 0; i<lines.size(); i++) { // do the following for each line
     Line l = lines.get(i);
-    l.display();
-    l.checkTimer();
+    if ( l.endX < width) {
+
+      
+      l.checkTimer();
+      l.display();
+    }
     //println("drawing line: starting x: " + a.startX + " starting y: "+ a.startY + " ending x: " + a.endX + " ending y: "+ a.endY);
   }
   for (int i = 0; i<fireballs.size(); i++) { // do the following for each fb in my list
-
     Fireball f = fireballs.get(i);
     f.display();
   }
@@ -48,85 +51,92 @@ void keyPressed() { // check what button is pressed
   }
 }
 
-void drawLine( int x, int y, int endX, int endY) {
+void drawLine( int x, int y ) {
   //println("new line made with starting x: " + x + " and y: "+ y);
   lines.add( new Line( x, y ) ); // make a new line in my array
-  //drawFireball( endX, endY ); // draw fireball at the end of the line
+  
 }
 
-void drawFireball(int x, int y) {
-  // fireball made
+void drawFireball( int x, int y ) {
+  println("fireball made");
   fireballs.add( new Fireball( x, y ) );
 }
 
 class Line {
-   
   float startingX, startingY, finalX, finalY;
-  float startX=startingX, startY=startingY, endX, endY;
+  float startX, startY, endX, endY;
   int timer = 0;
   color lineC = color(255);
   int lineW = 2;
-  
-  float missileIncrementLength = 15;
+
+  float missileIncrementLength = 5;
   float missileLength = 20;
-  int missileMoveDelay = 20000;
+  int missileMoveDelay = 20;
 
   Line( int ix, int iy ) {
     startingX=ix;
     startingY=iy;
     finalX=mouseX;
     finalY=mouseY;
+    startX=startingX;
+    startY=startingY;
+
+
   }
-
+  
+  
   void display() {
+      stroke(lineC);
+      strokeWeight(lineW);
+      line(startX, startY, endX, endY);
+      checkDestination();
+      checkTimer();
     
-
-    stroke(lineC);
-    strokeWeight(lineW);
-    line(startX, startY, endX, endY);
   }
 
   void checkTimer() {
     if ( millis()>timer ) { // move missile every x milliseconds
-      
-      /*
-      startingX: 60.0 startingY: 685.0 finalX: 566.0 finalY: 498.0
-      startX: 14.069918 startY: -5.1997523 endX: 32.829807 endY: -12.132755
-      deltaX_total: 506.0 deltaY_total: -187.0 hypotenuse_total: 539.4488 hypotenuse_missile_inc: 35.0
-      */
-      
-      //float missileIncrementLength = 15;
-      //float missileLength = 20;
-      
-      // this does not work
-      
-      float deltaX_total = finalX - startingX; //506
-      float deltaY_total = finalY - startingY; //-187
-      float hypotenuse_total = sqrt( sq(deltaX_total) + sq(deltaY_total) ); // 539
-      float hypotenuse_missile_inc = missileLength + missileIncrementLength; // 35
-      float deltaX_missile_inc = hypotenuse_missile_inc * ( deltaX_total / hypotenuse_total ); // 32.9
-      float deltaY_missile_inc = hypotenuse_missile_inc * ( deltaY_total / hypotenuse_total ); // -12.1
-      
-      float deltaX_missile = missileLength * ( deltaX_total / hypotenuse_total ); // 18.8
-      float deltaY_missile = missileLength * ( deltaY_total / hypotenuse_total ); // -6.9
-      
-      endX = startX + deltaX_missile_inc; // 92.9
-      endY = startY + deltaY_missile_inc; // 672.9
-      
-      startX = endX - deltaX_missile; // 74.1 
-      startY = endY - deltaY_missile; // 679.8
-      
-      // startX etc is wrong
-        
-        
+      update();
       timer = millis() + missileMoveDelay;
+
+      //
+    }
+  }
+
+  void update() {
+    float deltaX_total = finalX - startingX;
+    float deltaY_total = finalY - startingY;
+    float hypotenuse_total = sqrt( sq(deltaX_total) + sq(deltaY_total) );
+    float hypotenuse_missile_inc = missileLength + missileIncrementLength;
+    float deltaX_missile_inc = hypotenuse_missile_inc * ( deltaX_total / hypotenuse_total );
+    float deltaY_missile_inc = hypotenuse_missile_inc * ( deltaY_total / hypotenuse_total );
+
+    float deltaX_missile = missileLength * ( deltaX_total / hypotenuse_total );
+    float deltaY_missile = missileLength * ( deltaY_total / hypotenuse_total );
+
+    endX = startX + deltaX_missile_inc;
+    endY = startY + deltaY_missile_inc;
+
+    startX = endX - deltaX_missile;
+    startY = endY - deltaY_missile;
+
+
+
+  
+    //println();
+    //println("startingX: " + startingX + " startingY: " + startingY + " finalX: " + finalX + " finalY: " + finalY);
+    //println("startX: " + startX + " startY: " + startY + " endX: " + endX + " endY: " + endY);
+    //println("deltaX_total: " + deltaX_total + " deltaY_total: " + deltaY_total + " hypotenuse_total: " + hypotenuse_total + " hypotenuse_missile_inc: " + hypotenuse_missile_inc );
+    
+  }
+  
+  void checkDestination() {
+    if ( endY<finalY ) {
+      println("missile has reached mark");
+      drawFireball( int(endX), int(endY) ); // draw fireball at the end of the line
+      startX = width+100; // get rid of line when it hits its destination
+      endX = width+100; // get rid of line when it hits its destination
       
-      println();
-      println("startingX: " + startingX + " startingY: " + startingY + " finalX: " + finalX + " finalY: " + finalY);
-      println("startX: " + startX + " startY: " + startY + " endX: " + endX + " endY: " + endY); 
-      println("deltaX_total: " + deltaX_total + " deltaY_total: " + deltaY_total + " hypotenuse_total: " + hypotenuse_total + " hypotenuse_missile_inc: " + hypotenuse_missile_inc );
-      
-//  
     }
   }
 }
@@ -154,14 +164,17 @@ class Fireball {
   void display() {
     timeDelta = time - millis();
     timeDelta2 = time2 - millis();
-    if ( timeDelta >= 0 ) { fbSize = fbMaxSize - ( timeDelta / ( fbLifetime*1000 / fbMaxSize ) ); }
-    if ( timeDelta <= 0 ) { fbSize = fbMaxSize/2 + ( timeDelta2 / ( fbLifetime*2000 / fbMaxSize ) ); }
+    if ( timeDelta >= 0 ) {
+      fbSize = fbMaxSize - ( timeDelta / ( fbLifetime*1000 / fbMaxSize ) );
+    }
+    if ( timeDelta <= 0 ) {
+      fbSize = fbMaxSize/2 + ( timeDelta2 / ( fbLifetime*2000 / fbMaxSize ) );
+    }
 
     fill(fbColour);
     if ( fbSize > 0 ) {
       ellipse(fbX, fbY, fbSize, fbSize);
     }
-    
   }
 }
 
@@ -176,9 +189,10 @@ void drawMoutain(int leftX, int bottomY) { // this generates the little pyramids
 }
 
 void fireCannon(int cannonNum) { // draws line from specified cannon to mouse coordinates
+   //println("fired cannon");
   int x = 60+( ( cannonNum-1 ) * 340 );
-  if ( mouseY < height-100 && cannonAmmoCounts[cannonNum-1] > 0 ) { // if your mouse is in the playing area, and you have ammo
-    drawLine( x, height-115, mouseX, mouseY );
+  if ( mouseY < height-100 && cannonAmmoCounts[cannonNum-1] > 0 ) { // if your mouse is in the playing area, and you have ammo // 
+    drawLine( x, height-115 );
   }
   cannonAmmoCounts[cannonNum-1]--; // lose one ammo for shooting
 }
