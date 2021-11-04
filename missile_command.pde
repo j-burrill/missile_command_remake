@@ -44,11 +44,12 @@ void keyPressed() { // check what button is pressed
 
 void drawLine(int x, int y) {
   //println("new line made with starting x: " + x + " and y: "+ y);
-  lines.add(new Line(x, y));
+  lines.add(new Line(x, y)); // make a new line in my array
 }
 
 class Line {
-  int startX, startY, endX, endY;
+  int startX, startY, endX, endY, finalX, finalY;
+  int timer;
 
   Line(int ix, int iy) {
     startX=ix;
@@ -59,41 +60,51 @@ class Line {
 
   void display() {
     //println("drawing line: starting x: " + startX + " starting y: "+ startY + " ending x: " + endX + " ending y: "+ endY);
+    
+    float lineLength = sqrt( sq(finalX-startX) + sq(finalY-startY) );
+    timer = millis() + 100;
+    
     stroke(lineC);
     strokeWeight(lineW);
     line(startX, startY, endX, endY);
+    
   }
+  
+  //void timer() {
+    
+  //}
 }
 
 class Fireball {
-//  int startX, startY, endX, endY;
+  int fbX, fbY;
+  int fbSize = 40; // adjust max size of fireball
 
-//  Line(int ix, int iy) {
-//    startX=ix;
-//    startY=iy;
-//    endX=mouseX;
-//    endY=mouseY;
-//  }
+  Fireball(int ix, int iy) {
+    fbX = ix;
+    fbY = iy;
+  }
 
-//  void display() {
-//    //println("drawing line: starting x: " + startX + " starting y: "+ startY + " ending x: " + endX + " ending y: "+ endY);
-//    stroke(lineC);
-//    strokeWeight(lineW);
-//    line(startX, startY, endX, endY);
-//  }
-//}
+  //void display() {
+  //  //println("drawing line: starting x: " + startX + " starting y: "+ startY + " ending x: " + endX + " ending y: "+ endY);
+  //  stroke(lineC);
+  //  strokeWeight(lineW);
+  //  line(startX, startY, endX, endY);
+  //}
+}
 
-//void drawMoutain(int leftX, int bottomY) { // this generates the little pyramids the cannons sit on
-//  int levelH = 15;
-//  int levels = 4;
-//  int startW = 120;
-//  int wDifference = startW/levels; // change these to change mountain dimensions
-//  for (int i = levels; i>0; i--) {
-//    rect(leftX+(wDifference/2*i), bottomY-(levelH*i), startW-wDifference*i, levelH);
-//  }
+void drawMoutain(int leftX, int bottomY) { // this generates the little pyramids the cannons sit on
+  int levelH = 15;
+  int levels = 4;
+  int startW = 120;
+  int wDifference = startW/levels; // change these to change mountain dimensions
+  for (int i = levels; i>0; i--) {
+    rect(leftX+(wDifference/2*i), bottomY-(levelH*i), startW-wDifference*i, levelH);
+  }
 }
 
 void fireCannon(int cannonNum) { // draws line from specified cannon to mouse coordinates
   int x = 60+((cannonNum-1)*340);
-  drawLine(x, height-115);  
+  if (mouseY < height-100) {
+    drawLine(x, height-115); 
+  }
 }
