@@ -14,7 +14,7 @@ class Fireball {
     pos = new Point( ix, iy );
 
     maxSize = isize;
-    fbLifetime = maxSize/30; // fireball lifetime is proportionate to its size
+    fbLifetime = maxSize/40; // fireball lifetime is proportionate to its size
 
     // adjust how long the fireball stays for
     time = millis() + fbLifetime*1000;
@@ -22,10 +22,10 @@ class Fireball {
   }
 
   void display() {
-
     // this controls the balls getting bigger, then growing back smaller
     timeDelta = time - millis();
     timeDelta2 = time2 - millis();
+
     if ( timeDelta >= 0 ) {
       size = maxSize - ( timeDelta / ( fbLifetime*1000 / maxSize ) ); // make ball bigger while it's on the first timer
     }
@@ -33,9 +33,10 @@ class Fireball {
       size = maxSize/2 + ( timeDelta2 / ( fbLifetime*2000 / maxSize ) ); // make ball smaller while it's on the second timer
     }
 
-    fill(fbColour);
-    stroke(fbColour);
+
     if ( size > 0 ) { // stop drawing the ball when the size hits 0
+      fill(fbColour);
+      stroke(fbColour);
       ellipse( pos.x, pos.y, size, size ); //
     }
   }

@@ -2,15 +2,21 @@
   Justin Burrill
  Nov 02 2021
  Missile command for the Atari recreation
+ 
+ to do: make the tracer stay after the line splits
  */
 
-int floorH = 20;
+
 ArrayList<Missile> missiles = new ArrayList<Missile>(); // list of all my missiles
 ArrayList<Fireball> fireballs = new ArrayList<Fireball>(); // list of all my fireballs
 ArrayList<Cannon> cannons = new ArrayList<Cannon>(); // list of all my fireballs
+ArrayList<Tracer> tracers = new ArrayList<Tracer>(); // list of all my tracers
+
+final int floorH = 20;
 int enemyTimer = 0;
 boolean menuOpen = true;
 int score, hscore;
+color backgroundColour = color(0);
 
 void setup() {
   size(800, 800);
@@ -20,12 +26,30 @@ void setup() {
 }
 
 void draw() {
-  background(0);
+  background( backgroundColour );
   stroke(125, 83, 54);
   strokeWeight(0);
   fill(125, 83, 54);
 
   rect(0, height-floorH, width, floorH); // rectangle for the ground
+
+  for (int i = 0; i<tracers.size(); i++) { // display all my fireballs each frame
+    Tracer t = tracers.get(i);
+    t.display();
+  }
+
+
+
+
+  for (int i = 0; i<cannons.size(); i++) { // display all my cannons each frame
+    Cannon c = cannons.get(i);
+    c.display();
+  }
+
+  for (int i = 0; i<fireballs.size(); i++) { // display all my fireballs each frame
+    Fireball f = fireballs.get(i);
+    f.display();
+  }
 
   for (int i = 0; i<missiles.size(); i++) { // do the following for each missile
     Missile m = missiles.get(i);
@@ -37,21 +61,11 @@ void draw() {
     }
     //println("drawing line: starting x: " + a.startX + " starting y: "+ a.startY + " ending x: " + a.endX + " ending y: "+ a.endY);
   }
-  for (int i = 0; i<fireballs.size(); i++) { // display all my fireballs each frame
-    Fireball f = fireballs.get(i);
-    f.display();
-  }
-
-  for (int i = 0; i<cannons.size(); i++) { // display all my cannons each frame
-    Cannon c = cannons.get(i);
-    c.display();
-  }
-
-
   if ( millis() > enemyTimer && !menuOpen ) { // spawn enemies every x milliseconds if menu is closed
     //println("enemytimer ran out");
-    newEnemy();
-    enemyTimer = millis() + 1800;
+    Point spawn = new Point( int(random(0, width)), 0);
+    spawnEnemyMissile( spawn );
+    enemyTimer = millis() + 1800; //1800
   }
 
   if ( menuOpen ) {
@@ -112,7 +126,9 @@ void mousePressed() {
 
 void newMissile( int x, int y, int fx, int fy, boolean p ) {
   //println("new line made with starting x: " + x + " and y: "+ y);
-  missiles.add( new Missile( x, y, fx, fy, p) ); // make a new missile in my array
+  Missile m = new Missile( x, y, fx, fy, p);
+  missiles.add( m ); // make a new missile in my array
+  spawnTracer( m, p );
 }
 
 void newFireball( int x, int y, int size ) {
@@ -120,10 +136,15 @@ void newFireball( int x, int y, int size ) {
   fireballs.add( new Fireball( x, y, size ) ); // make a new object for each fireball and and to array
 }
 
-void newEnemy() {
+void spawnEnemyMissile( Point spawn ) {
   int borderOffset = 80; // no missiles right on the edge of the screen
-  int x = int(random(borderOffset, width-borderOffset)); // pick random start pos from the top of the screen
   int targetX = int(random(borderOffset, width-borderOffset)); // pick a random point on the ground to target
 
-  newMissile( x, 0, targetX, height, false ); // enemies are just missiles but a bit different
+  // enemies are just missiles but a bit different
+  newMissile( int(spawn.x), int(spawn.y), targetX, height, false );
+}
+
+void spawnTracer( Missile m, boolean player ) {
+  Tracer t = new Tracer( m, player );
+  tracers.add( t );
 }

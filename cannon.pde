@@ -15,7 +15,7 @@ class Cannon {
 
   void fireCannon() { // draws path for the missile from specified cannon to mouse coordinates
     //println("fired cannon");
-    if ( mouseY < height-y && ammo > 0 && !menuOpen ) { // if your mouse is in the playing area, and you have ammo, and the game is running, fire missile
+    if ( ammo > 0 && !menuOpen ) { // if your mouse is in the playing area, and you have ammo, and the game is running, fire missile
       newMissile( x, height-y, mouseX, mouseY, true );
       ammo--; // lose one ammo for shooting
     }
