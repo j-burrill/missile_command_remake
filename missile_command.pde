@@ -16,7 +16,7 @@ final int floorH = 20;
 int enemyTimer = 0;
 boolean menuOpen = true;
 int score, hscore;
-color backgroundColour = color(0);
+final color backgroundColour = color(0);
 
 void setup() {
   size(800, 800);
@@ -30,16 +30,13 @@ void draw() {
   stroke(125, 83, 54);
   strokeWeight(0);
   fill(125, 83, 54);
-
+  
   rect(0, height-floorH, width, floorH); // rectangle for the ground
 
-  for (int i = 0; i<tracers.size(); i++) { // display all my fireballs each frame
+  for (int i = 0; i<tracers.size(); i++) { // display all my tracers each frame
     Tracer t = tracers.get(i);
     t.display();
   }
-
-
-
 
   for (int i = 0; i<cannons.size(); i++) { // display all my cannons each frame
     Cannon c = cannons.get(i);
@@ -63,8 +60,12 @@ void draw() {
   }
   if ( millis() > enemyTimer && !menuOpen ) { // spawn enemies every x milliseconds if menu is closed
     //println("enemytimer ran out");
+    int borderOffset = 80; // no missiles right on the edge of the screen
+    int targetX = int(random(borderOffset, width-borderOffset)); // pick a random point on the ground to target
+
     Point spawn = new Point( int(random(0, width)), 0);
-    spawnEnemyMissile( spawn );
+    Point finish = new Point( targetX, height );
+    spawnEnemyMissile( spawn, finish );
     enemyTimer = millis() + 1800; //1800
   }
 
@@ -80,7 +81,7 @@ void draw() {
      */
     String scoretxt = "Score: " + score;
     String hscoretxt = "Highscore: " + hscore;
-    String tutorialtxt = "Use 1,2,3 or A,S,D to fire your missiles";
+    String tutorialtxt = "Use 1, 2, 3 or A, S, D to fire your missiles";
     String menutxt = "Click to start...";
 
     text(scoretxt, width/2-textWidth(scoretxt)/2, height/2-50);
@@ -109,24 +110,21 @@ void mousePressed() {
     score = 0; // reset score
     enemyTimer = millis() + 2000; // delay before starting
 
+    missiles.clear(); // clear screen
+    fireballs.clear();
+    tracers.clear();
+
     for ( int i = 0; i < cannons.size(); i++ ) { // reset ammo
       Cannon c = cannons.get(i);
       c.reset();
     }
-    for ( int i = 0; i < missiles.size(); i++ ) { // kill all the missiles
-      Missile l = missiles.get(i);
-      l.killMissile();
-    }
-    for ( int i = 0; i < fireballs.size(); i++ ) { // kill all the fireballs
-      Fireball f = fireballs.get(i);
-      f.kill();
-    }
+    
   }
 }
 
-void newMissile( int x, int y, int fx, int fy, boolean p ) {
+void newMissile( Point start, Point finish, boolean p ) {
   //println("new line made with starting x: " + x + " and y: "+ y);
-  Missile m = new Missile( x, y, fx, fy, p);
+  Missile m = new Missile( start, finish, p);
   missiles.add( m ); // make a new missile in my array
   spawnTracer( m, p );
 }
@@ -136,12 +134,10 @@ void newFireball( int x, int y, int size ) {
   fireballs.add( new Fireball( x, y, size ) ); // make a new object for each fireball and and to array
 }
 
-void spawnEnemyMissile( Point spawn ) {
-  int borderOffset = 80; // no missiles right on the edge of the screen
-  int targetX = int(random(borderOffset, width-borderOffset)); // pick a random point on the ground to target
+void spawnEnemyMissile( Point spawn, Point finish ) {
 
   // enemies are just missiles but a bit different
-  newMissile( int(spawn.x), int(spawn.y), targetX, height, false );
+  newMissile( spawn, finish, false );
 }
 
 void spawnTracer( Missile m, boolean player ) {

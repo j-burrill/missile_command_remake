@@ -27,7 +27,7 @@ class Tracer {
 
   void update() {
     start = missile.path_start;
-    end = missile.killpos;
-    println(end.x);
+    end = ( missile.playerMissile ) ? missile.missile_start : missile.splitPos;
+    //println(end.x);
   }
 }

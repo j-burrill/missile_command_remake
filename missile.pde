@@ -8,7 +8,7 @@ class Missile {
   Point path_finish;
   Point missile_start;
   Point missile_end;
-  Point killpos; // this is for the tracer, so it knows where to stay
+  Point splitPos; // this is for the tracer, so it knows where to stay after missile split
 
   int timer = 0;
   color lineColour = color(255);
@@ -21,20 +21,20 @@ class Missile {
 
   boolean playerMissile;
 
-  Missile( int ix, int iy, int ifx, int ify, boolean pMissile ) {
-    path_start = new Point( ix, iy );
-    path_finish = new Point( ifx, ify );
+  Missile( Point ipath_start, Point ipath_finish, boolean pMissile ) {
+    path_start = ipath_start;
+    path_finish = ipath_finish;
     missile_start = new Point( path_start.x, path_start.y );
     missile_end = new Point( path_start.x, path_start.y ); // this avoids NPE
     playerMissile = pMissile;
-    killpos = missile_start;
 
     if (!playerMissile) { // missiles from the enemy look and move differently, i set these values here
-      missileIncrementLength = 2;
+      missileIncrementLength = 3; // 2
       missileLength = 20;
       missileMoveDelay = 25;
       lineColour = color(255, 168, 158);
       missileLength = 5;
+      splitPos = missile_start;
     }
   }
 
@@ -46,9 +46,11 @@ class Missile {
 
     checkDestination(); // also check to see if it's reached it destination every frame
 
-    if ( !playerMissile ) { // if it's an enemy missile, check for collision with fireballs. player missiles aren't affected by the fireballs
-      checkSplitMissile(); // chance to split missile each frame
-
+    if ( !playerMissile ) { // if it's an enemy missile, check for collision with fireballs. player missiles aren't affected by the fireballs   
+      final int missileSplitCutoff = 150; // missiles won't split past a certain height
+      if ( missile_end.y <height-missileSplitCutoff) {
+        checkSplitMissile(); // chance to split missile each frame
+      }
       for (int i = 0; i<fireballs.size(); i++) { // check collision with each fireball on the screen
         Fireball f = fireballs.get(i);
         checkCollision(f);
@@ -82,9 +84,9 @@ class Missile {
 
     missile_start.x = missile_end.x - deltaX_missile;
     missile_start.y = missile_end.y - deltaY_missile;
-    
-    if ( missile_start.x < width ) {
-      killpos = missile_start;
+
+    if ( !playerMissile && missile_start.x < width ) {
+      splitPos = missile_start;
     }
     //println();
     //println("starting.x: " + starting.x + " startingY: " + startingY + " final_pos.x: " + final_pos.x + " path_finish.y: " + path_finish.y);
@@ -94,13 +96,12 @@ class Missile {
 
   void checkDestination() {
     if (playerMissile) {
-      if ( path_start.y < path_finish.y && missile_end.y > path_finish.y ) {
+      if ( path_start.y < path_finish.y && missile_end.y > path_finish.y 
+      || path_start.y > path_finish.y && missile_end.y < path_finish.y ) {
         finishPlayerMissile();
       }
-      if ( path_start.y > path_finish.y && missile_end.y < path_finish.y ) {
-        finishPlayerMissile();
-      }
-    } else if ( missile_end.y>height-floorH ) {
+
+    } else if ( missile_end.y > height-floorH ) {
       finishEnemyMissile();
     }
   }
@@ -149,22 +150,43 @@ class Missile {
   }
 
   void checkSplitMissile() {
-
     if ( millis() > splitTimer ) { // split enemies every x milliseconds
-
-      int chance = int(random(-10, 1000-missile_end.y));
-      if ( chance < 0 ) {
-        splitMissile();
-      }
+      int chance = 800 ; // lower number means more likely to split, default = 1000
+      int result = int(random(-10, chance - missile_end.y/3));
       splitTimer = millis()+800;
+
+      if ( result < 0 ) {
+        final int splitMissileCount = 2;
+
+        splitMissile( splitMissileCount );
+        result = 1;
+      }
       //println(chance);
     }
   }
 
-  void splitMissile() {
-    Point target = new Point( missile_end.x, missile_end.y );
-    spawnEnemyMissile( target );
-    spawnEnemyMissile( target );
+  void splitMissile( int count ) {
+    for ( int i = 0; i < count; i++ ) {
+      int finishx = newMissileTarget();
+      //while ( finishx < 0 || finishx > width ) { // recalculate if the target is out of bounds
+      //  println("finishx out of bounds");
+      //  finishx = newMissileTarget();
+      //}
+
+      Point spawn = new Point( missile_end.x, missile_end.y );
+      Point finish = new Point( finishx, height );
+      //println("finish.x: " + finish.x);
+      spawnEnemyMissile( spawn, finish );
+    }
+
     killMissile();
+    println(splitPos.x, splitPos.y);
+  }
+
+  int newMissileTarget() {
+    int distFromBottom = height - int(missile_end.x);
+    int newFinishOffset = distFromBottom / 4;
+    int finishx = int( missile_end.x + random( -newFinishOffset, newFinishOffset ) );
+    return finishx;
   }
 }
