@@ -1,11 +1,11 @@
 /*
- this class is to replace everywhere where i had two variables for x and y
+ this class is to replace everywhere where i had two variables for x and y with a single object
  */
 
 class Point {
   float x, y;
-  Point( float ix, float iy) {
-    x=ix;
-    y=iy;
+  Point( float x, float y ) {
+    this.x=x;
+    this.y=y;
   }
 }

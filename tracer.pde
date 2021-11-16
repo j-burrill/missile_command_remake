@@ -1,3 +1,7 @@
+/*
+ this controls the lines that follow the missiles
+ */
+
 class Tracer {
   Point start;
   Point end;
@@ -16,18 +20,17 @@ class Tracer {
 
   void display() {
     update();
-
-    if ( end.x < width ) {
+    
+    if ( !missile.isSplit && end.x < width || missile.isSplit && missile.childCount > 0 ) {
       stroke(tracerColour);
       strokeWeight(2);
-      //println("drawing tracer with start.x: " + start.x + " start.y: " + start.y + " end.x: " + end.x + " end.y: " + end.y);
       line( start.x, start.y, end.x, end.y );
     }
   }
 
   void update() {
     start = missile.path_start;
-    end = ( missile.playerMissile ) ? missile.missile_start : missile.splitPos;
+    end = ( playerTracer ) ? missile.missile_tail : missile.splitPos; // take different variable if it's a player or enemy missile
     //println(end.x);
   }
 }

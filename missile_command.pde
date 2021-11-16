@@ -4,6 +4,8 @@
  Missile command for the Atari recreation
  
  to do: make the tracer stay after the line splits
+        the splitpos follows the tail pos offscreen
+        finish the reticle flashing
  */
 
 
@@ -11,6 +13,8 @@ ArrayList<Missile> missiles = new ArrayList<Missile>(); // list of all my missil
 ArrayList<Fireball> fireballs = new ArrayList<Fireball>(); // list of all my fireballs
 ArrayList<Cannon> cannons = new ArrayList<Cannon>(); // list of all my fireballs
 ArrayList<Tracer> tracers = new ArrayList<Tracer>(); // list of all my tracers
+ArrayList<Reticle> reticles = new ArrayList<Reticle>(); // list of all my reticles
+
 
 final int floorH = 20;
 int enemyTimer = 0;
@@ -30,7 +34,7 @@ void draw() {
   stroke(125, 83, 54);
   strokeWeight(0);
   fill(125, 83, 54);
-  
+
   rect(0, height-floorH, width, floorH); // rectangle for the ground
 
   for (int i = 0; i<tracers.size(); i++) { // display all my tracers each frame
@@ -50,7 +54,7 @@ void draw() {
 
   for (int i = 0; i<missiles.size(); i++) { // do the following for each missile
     Missile m = missiles.get(i);
-    if ( m.missile_end.x < width) { // don't draw if it's outside of the screen, this is important because i kill the missiles by putting them outside
+    if ( m.missile_nose.x < width) { // don't draw if it's outside of the screen, this is important because i kill the missiles by putting them outside
 
 
       m.checkTimer(); // move missile when it's timer runs out
@@ -58,6 +62,12 @@ void draw() {
     }
     //println("drawing line: starting x: " + a.startX + " starting y: "+ a.startY + " ending x: " + a.endX + " ending y: "+ a.endY);
   }
+
+  for (int i = 0; i<reticles.size(); i++) { // display all my reticles each frame
+    Reticle r = reticles.get(i);
+    r.display();
+  }
+
   if ( millis() > enemyTimer && !menuOpen ) { // spawn enemies every x milliseconds if menu is closed
     //println("enemytimer ran out");
     int borderOffset = 80; // no missiles right on the edge of the screen
@@ -65,7 +75,7 @@ void draw() {
 
     Point spawn = new Point( int(random(0, width)), 0);
     Point finish = new Point( targetX, height );
-    spawnEnemyMissile( spawn, finish );
+    spawnEnemyMissile( spawn, finish, null );
     enemyTimer = millis() + 1800; //1800
   }
 
@@ -109,24 +119,32 @@ void mousePressed() {
     menuOpen = false; // close menu
     score = 0; // reset score
     enemyTimer = millis() + 2000; // delay before starting
-
-    missiles.clear(); // clear screen
-    fireballs.clear();
-    tracers.clear();
-
+    resetScreen();
     for ( int i = 0; i < cannons.size(); i++ ) { // reset ammo
       Cannon c = cannons.get(i);
       c.reset();
     }
-    
   }
 }
 
-void newMissile( Point start, Point finish, boolean p ) {
-  //println("new line made with starting x: " + x + " and y: "+ y);
-  Missile m = new Missile( start, finish, p);
+void resetScreen() {
+  missiles.clear(); // clear everything off screen
+  fireballs.clear();
+  tracers.clear();
+}
+
+void newMissile( Point start, Point finish, boolean player, Missile parent ) {
+  Missile m = new Missile( start, finish, player, parent );
   missiles.add( m ); // make a new missile in my array
-  spawnTracer( m, p );
+  spawnTracer( m, player ); // new tracer with the missile as its parent
+  if (player) {
+    newReticle(m);
+  } // only the player's missiles get reticles
+}
+
+void newReticle( Missile m ) {
+  Reticle r = new Reticle( mouseX, mouseY, m ); // make a new reticle where the mouse is and tie it to the missile
+  reticles.add(r); // add it to the array
 }
 
 void newFireball( int x, int y, int size ) {
@@ -134,10 +152,10 @@ void newFireball( int x, int y, int size ) {
   fireballs.add( new Fireball( x, y, size ) ); // make a new object for each fireball and and to array
 }
 
-void spawnEnemyMissile( Point spawn, Point finish ) {
+void spawnEnemyMissile( Point spawn, Point finish, Missile parent ) {
 
   // enemies are just missiles but a bit different
-  newMissile( spawn, finish, false );
+  newMissile( spawn, finish, false, parent );
 }
 
 void spawnTracer( Missile m, boolean player ) {
