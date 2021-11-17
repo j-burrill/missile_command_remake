@@ -4,8 +4,9 @@
  Missile command for the Atari recreation
  
  to do: make the tracer stay after the line splits
-        the splitpos follows the tail pos offscreen
-        finish the reticle flashing
+ the splitpos follows the tail pos offscreen
+ finish the reticle flashing
+ edit cannon count, make controls work with
  */
 
 
@@ -15,17 +16,29 @@ ArrayList<Cannon> cannons = new ArrayList<Cannon>(); // list of all my fireballs
 ArrayList<Tracer> tracers = new ArrayList<Tracer>(); // list of all my tracers
 ArrayList<Reticle> reticles = new ArrayList<Reticle>(); // list of all my reticles
 
+JSONObject cfg; // some settings are written in a json file
 
-final int floorH = 20;
+
+int floorHeight, cannonCount;
 int enemyTimer = 0;
 boolean menuOpen = true;
 int score, hscore;
 final color backgroundColour = color(0);
+color dirtColour = color(125, 83, 54);
+
 
 void setup() {
+  cfg = loadJSONObject("cfg.json");// get settings from the json file
+  floorHeight = cfg.getInt("floorHeight");
+  cannonCount = cfg.getInt("cannonCount");
+
   size(800, 800);
-  for (int i = 0; i<3; i++) {
+  for (int i = 0; i<cannonCount; i++) {
+    //println("new cannon made");
     cannons.add( new Cannon( i ) ); // make my cannons
+  }
+  if (cannonCount>10||cannonCount<1) {
+    println("cannon count out of bounds");
   }
 }
 
@@ -33,9 +46,9 @@ void draw() {
   background( backgroundColour );
   stroke(125, 83, 54);
   strokeWeight(0);
-  fill(125, 83, 54);
+  fill(dirtColour);
 
-  rect(0, height-floorH, width, floorH); // rectangle for the ground
+  rect(0, height-floorHeight, width, floorHeight); // rectangle for the ground
 
   for (int i = 0; i<tracers.size(); i++) { // display all my tracers each frame
     Tracer t = tracers.get(i);
@@ -102,6 +115,7 @@ void draw() {
 }
 
 void keyPressed() { // check what button is pressed
+  // TODO: make this work with different number of cannons
   if (key == 'a' || key == '1') { // player uses these keys to fire the cannons
     //println("a pressed");
     cannons.get(0).fireCannon();
@@ -161,4 +175,10 @@ void spawnEnemyMissile( Point spawn, Point finish, Missile parent ) {
 void spawnTracer( Missile m, boolean player ) {
   Tracer t = new Tracer( m, player );
   tracers.add( t );
+}
+
+void drawCentreLine() { // used for making sure my cannons are in the right spots and stuff
+  stroke(255);
+  strokeWeight(2);
+  line(width/2, 0, width/2, height);
 }

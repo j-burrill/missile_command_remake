@@ -1,0 +1,8 @@
+{
+	"floorHeight": 20,
+	"cannonCount": 3,
+	"mountain_levelH": 15,
+	"mountain_levels": 4,
+	"mountain_startW": 120,
+	"missile_splitMissileCount": 3
+}

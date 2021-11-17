@@ -3,21 +3,25 @@
  */
 
 class Cannon {
+  int mountain_levelH = cfg.getInt("mountain_levelH"); // these are for the mountain
+  int mountain_levels = cfg.getInt("mountain_levels");
+  int mountain_startW = cfg.getInt("mountain_startW");
+
   int cannonNumber;
-  int x;
-  int y = 65;
+  int xPos;
+  int yPos = height-(floorHeight + mountain_levelH * mountain_levels);
   int defaultAmmo = 15;
   int ammo = defaultAmmo;
-  
+
   Cannon( int num ) {
     cannonNumber = num;
-    x = 60 + ( ( num ) * 340 ); // defines where the missiles come from
+    //xPos = 60 + ( ( num ) * 340 ); // defines where the missiles come from // old
   }
 
   void fireCannon() { // draws path for the missile from specified cannon to mouse coordinates
     //println("fired cannon");
     if ( ammo > 0 && !menuOpen ) { // if your mouse is in the playing area, and you have ammo, and the game is running, fire missile
-      Point start = new Point( x, height-y );
+      Point start = new Point( xPos, yPos+mountain_levelH ); // need to subtract the height of one level because of the way i draw the mountain
       Point finish = new Point( mouseX, mouseY );
       newMissile( start, finish, true, null );
       ammo--; // lose one ammo for shooting
@@ -25,10 +29,13 @@ class Cannon {
   }
 
   void display() {
-    fill(125, 83, 54);
-    stroke(125, 83, 54);
+    xPos = findXpos();
+
+    fill(dirtColour);
+    stroke(dirtColour);
     strokeWeight(0);
-    drawMoutain(x-60, height-floorH);
+    drawMoutain(xPos-mountain_startW/2, height-floorHeight);
+
 
     fill(255);
     textSize(25);
@@ -36,20 +43,27 @@ class Cannon {
     if (ammo == 0) {
       ammoTxt="OUT"; // display OUT instead of 0 because it's more fun
     }
-    text(ammoTxt, x-textWidth(ammoTxt)/2, height-y+35); // display the ammo count
+    text(ammoTxt, xPos-textWidth(ammoTxt)/2, height-floorHeight-10); // display the ammo count
   }
+
   void reset() {
     ammo = defaultAmmo; // reset ammo
   }
 
   void drawMoutain(int leftX, int bottomY) { // this generates the little pyramids the cannons sit on
-    int levelH = 15;
-    int levels = 4;
-    int startW = 120;
-    int wDifference = startW/levels; // change these to change mountain dimensions
+    int wDifference = mountain_startW / mountain_levels;
 
-    for (int i = levels; i>0; i--) {
-      rect(leftX + ( wDifference/2 * i ), bottomY - ( levelH * i ), startW - wDifference * i, levelH ); // draw rectangles on top of each other
+    for (int i = mountain_levels; i>0; i--) { // draw rectangles on top of each other
+      int m_xPos = leftX + ( wDifference/2 * i );
+      int m_yPos = bottomY - ( mountain_levelH * i );
+      int m_width = mountain_startW - wDifference * i;
+      int m_height = mountain_levelH;
+      rect( m_xPos, m_yPos, m_width, m_height ); 
     }
+  }
+
+  int findXpos() {
+    int distBetweenMountains = width/cannonCount;
+    return distBetweenMountains/2 + distBetweenMountains*(cannonNumber)+1;
   }
 }

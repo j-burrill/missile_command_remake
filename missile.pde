@@ -15,7 +15,7 @@ class Missile {
   color lineColour = color(255);
   int lineWidth = 2;
 
-  float missileIncrementLength = 8; // how much it moves
+  float missileIncrementLength = 10; // how much it moves
   float missileLength = 15; // size of missile
   int missileMoveDelay = 16; // how often it moves
   int splitTimer;
@@ -34,7 +34,7 @@ class Missile {
     if (!playerMissile) { // missiles from the enemy look and move differently, i set these values here
       missileIncrementLength = 3; // 2
       missileLength = 20;
-      missileMoveDelay = 25;
+      missileMoveDelay = 22;
       lineColour = color(255, 168, 158);
       missileLength = 5;
       splitPos = missile_tail;
@@ -57,7 +57,7 @@ class Missile {
 
     if ( !playerMissile ) { // if it's an enemy missile, check for collision with fireballs. player missiles aren't affected by the fireballs
       final int missileSplitCutoff = 150; // missiles won't split past a certain height
-      if ( missile_nose.y < height-missileSplitCutoff) {
+      if ( missile_nose.y < height-floorHeight-missileSplitCutoff) {
         checkSplitMissile(); // chance to split missile each frame
       }
       for (int i = 0; i<fireballs.size(); i++) { // check collision with each fireball on the screen
@@ -104,7 +104,7 @@ class Missile {
 
         finishPlayerMissile();
       }
-    } else if ( missile_nose.y > height-floorH ) {
+    } else if ( missile_nose.y > height-floorHeight ) {
       finishEnemyMissile();
     }
   }
@@ -158,12 +158,12 @@ class Missile {
 
   void checkSplitMissile() {
     if ( millis() > splitTimer ) { // split enemies every x milliseconds
-      int chance = 400 ; // lower number means more likely to split, default = 1000
+      int chance = cfg.getInt("missile_splitMissileChance"); ; // lower number means more likely to split, default = 1000
       int result = int(random(-10, chance - missile_nose.y/3));
       splitTimer = millis()+800;
-
+      println(result);
       if ( result < 0 ) {
-        final int splitMissileCount = 2;
+        int splitMissileCount = cfg.getInt("missile_splitMissileCount"); // how many missiles it splits into
         childCount = splitMissileCount;
         splitMissile( splitMissileCount );
         result = 1;
