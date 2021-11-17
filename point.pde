@@ -4,8 +4,13 @@
 
 class Point {
   float x, y;
+  
   Point( float x, float y ) {
     this.x=x;
     this.y=y;
   }
+  
+  //Point( Point a ) {
+  //  this.x=a.x;
+  //}
 }

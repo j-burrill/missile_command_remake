@@ -4,6 +4,6 @@
 	"mountain_levelH": 15,
 	"mountain_levels": 4,
 	"mountain_startW": 120,
-	"missile_splitMissileCount": 3,
-	"missile_splitMissileChance": 700
+	"missile_splitMissileCount": 5,
+	"missile_splitMissileChance": 500
 }

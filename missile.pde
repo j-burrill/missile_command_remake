@@ -24,6 +24,8 @@ class Missile {
   boolean playerMissile;
   boolean isSplit = false;
 
+  
+
   Missile( Point ipath_start, Point ipath_finish, boolean pMissile, Missile parent ) {
     path_start = ipath_start;
     path_finish = ipath_finish;
@@ -40,6 +42,14 @@ class Missile {
       splitPos = missile_tail;
       parentMissile = parent;
     }
+  }
+  
+  Missile() {
+  }
+
+  Missile( Point ipath_start, Point ipath_finish, boolean pMissile) {
+    
+      this( ipath_start, ipath_finish, pMissile, null);
   }
 
 
