@@ -13,6 +13,8 @@ class Cannon {
   int defaultAmmo = 15;
   int ammo = defaultAmmo;
 
+
+
   Cannon( int num ) {
     cannonNumber = num;
     //xPos = 60 + ( ( num ) * 340 ); // defines where the missiles come from // old
@@ -58,7 +60,7 @@ class Cannon {
       int m_yPos = bottomY - ( mountain_levelH * i );
       int m_width = mountain_startW - wDifference * i;
       int m_height = mountain_levelH;
-      rect( m_xPos, m_yPos, m_width, m_height ); 
+      rect( m_xPos, m_yPos, m_width, m_height );
     }
   }
 
@@ -66,4 +68,6 @@ class Cannon {
     int distBetweenMountains = width/cannonCount;
     return distBetweenMountains/2 + distBetweenMountains*(cannonNumber)+1;
   }
+
+ 
 }

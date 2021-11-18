@@ -8,6 +8,7 @@ class Tracer {
   Missile missile;
   boolean playerTracer;
   color tracerColour = color( 161, 20, 10 ); // red for enemy
+  
 
   Tracer( Missile im, boolean iplayer ) {
     missile = im;
@@ -33,4 +34,5 @@ class Tracer {
     end = ( playerTracer ) ? missile.missile_tail : missile.splitPos; // take different variable if it's a player or enemy missile
     //println(end.x);
   }
+
 }

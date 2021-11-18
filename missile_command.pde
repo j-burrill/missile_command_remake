@@ -3,12 +3,12 @@
  Nov 02 2021
  Missile command for the Atari recreation
  
- to do: make the tracer stay after the line splits
- the splitpos follows the tail pos offscreen
- finish the reticle flashing
- edit cannon count, make controls work with
+ to do:
+ make the tracer stay after the line splits currently the splitpos follows the tail pos offscreen
+ find better system for cannon controls
+ make levels and proper system
+ make colours change with waves/levels
  */
-
 
 ArrayList<Missile> missiles = new ArrayList<Missile>(); // list of all my missiles
 ArrayList<Fireball> fireballs = new ArrayList<Fireball>(); // list of all my fireballs
@@ -18,29 +18,55 @@ ArrayList<Reticle> reticles = new ArrayList<Reticle>(); // list of all my reticl
 
 JSONObject cfg; // some settings are written in a json file
 
+boolean game_debugEnabled;
 
 int floorHeight, cannonCount;
 int enemyTimer = 0;
 boolean menuOpen = true;
 int score, hscore;
-final color backgroundColour = color(0);
-color dirtColour = color(125, 83, 54);
+
+color dirtColour, backgroundColour;
+color black = color( 0 );
+color white = color( 255 );
+color red = color( 255, 0, 0 );
+color pink = color( 255, 0, 242 );
+color blue = color( 0, 0, 255 );
+color green = color( 0, 255, 0 );
+color cyan = color( 0, 255, 247 );
+color yellow = color( 255, 251, 0 );
+color[] colourArray = { black, white, yellow, pink, red, cyan, green, blue };
+
+boolean cannon_debugEnabled;
+
+//int menuUpdateDelay = cfg.getInt("menu_textUpdateDelay");
+int menuUpdateDelay;
+int currentMenuUpdateDelay = menuUpdateDelay;
+int menuIndex = 0;
+String menuText2;
 
 
 void setup() {
-  cfg = loadJSONObject("cfg.json");// get settings from the json file
-  floorHeight = cfg.getInt("floorHeight");
+  cfg = loadJSONObject("cfg.json"); // get settings from the json file
+  floorHeight = cfg.getInt("level_floorHeight");
   cannonCount = cfg.getInt("cannonCount");
+  backgroundColour = color(0); // (0)
+  dirtColour = color(125, 83, 54); // (color(125, 83, 54)
+  game_debugEnabled = cfg.getBoolean("game_debug");
+  menuUpdateDelay = cfg.getInt("menu_textUpdateDelay");
+  cannon_debugEnabled = cfg.getBoolean("cannon_debug");
+
 
   size(800, 800);
   for (int i = 0; i<cannonCount; i++) {
     //println("new cannon made");
     cannons.add( new Cannon( i ) ); // make my cannons
   }
-  if (cannonCount>10||cannonCount<1) {
+  if ( cannonCount > 10 || cannonCount < 1 ) {
     println("cannon count out of bounds");
   }
 }
+
+
 
 void draw() {
   background( backgroundColour );
@@ -77,6 +103,9 @@ void draw() {
   }
 
   for (int i = 0; i<reticles.size(); i++) { // display all my reticles each frame
+    //if (game_debugEnabled) {
+    //  println("reticles.size(): "+reticles.size());
+    //}
     Reticle r = reticles.get(i);
     r.display();
   }
@@ -105,7 +134,8 @@ void draw() {
     String scoretxt = "Score: " + score;
     String hscoretxt = "Highscore: " + hscore;
     String tutorialtxt = "Use 1, 2, 3 or A, S, D to fire your missiles";
-    String menutxt = "Click to start...";
+    String menutxt = "Click to start"+menuTxt2();
+
 
     text(scoretxt, width/2-textWidth(scoretxt)/2, height/2-50);
     text(hscoretxt, width/2-textWidth(hscoretxt)/2, height/2-16);
@@ -114,19 +144,22 @@ void draw() {
   }
 }
 
-void keyPressed() { // check what button is pressed
-  // TODO: make this work with different number of cannons
-  if (key == 'a' || key == '1') { // player uses these keys to fire the cannons
-    //println("a pressed");
-    cannons.get(0).fireCannon();
+
+
+String menuTxt2() { // this handles the fun little animation on the main menu
+  String[] periodArray = {".  ", ".. ", "..."};
+  currentMenuUpdateDelay--;
+
+  if (currentMenuUpdateDelay <= 0) {
+    menuText2 = periodArray[menuIndex];
+    menuIndex = (menuIndex != periodArray.length-1) ? menuIndex+1 : 0 ;
+    currentMenuUpdateDelay=menuUpdateDelay;
   }
-  if (key == 's' || key == '2') {
-    cannons.get(1).fireCannon();
-  }
-  if (key == 'd' || key == '3') {
-    cannons.get(2).fireCannon();
-  }
+
+  return menuText2;
 }
+
+
 
 void mousePressed() {
   if ( menuOpen ) { // when reseting game:
@@ -155,8 +188,10 @@ void newMissile( Point start, Point finish, boolean player, Missile parent ) {
     newReticle(m);
   } // only the player's missiles get reticles
 }
-
 void newReticle( Missile m ) {
+  //if (game_debugEnabled) {
+  //  println("new reticle created");
+  //}
   Reticle r = new Reticle( mouseX, mouseY, m ); // make a new reticle where the mouse is and tie it to the missile
   reticles.add(r); // add it to the array
 }
@@ -181,4 +216,38 @@ void drawCentreLine() { // used for making sure my cannons are in the right spot
   stroke(255);
   strokeWeight(2);
   line(width/2, 0, width/2, height);
+}
+
+int nextColour( int inIndex ) {
+  int nextIndex = inIndex != colourArray.length-1? inIndex+1 : 0 ;
+  //if (game_debugEnabled) {
+  //  println("nextColour inIndex: "+inIndex);
+  //  println("nextColour nextIndex: "+nextIndex);
+  //  println("nextColour inIndex+1: "+inIndex+1);
+  //  println("nextColour colourArray.length: "+colourArray.length);
+  //}
+  return nextIndex;
+}
+
+void keyPressed() { // check what button is pressed
+  findKey(key); // in cannon
+}
+
+void findKey(int key) {
+  if (cannon_debugEnabled) {
+    println(key);
+  }
+  int cannon=0;
+  if (key == 'a' || key == 49) {cannon = 0;}
+  if (key == 's' || key == 50) {cannon = 1;}
+  if (key == 'd' || key == 51) {cannon = 2;}
+  if (key == 'f' || key == 52) {cannon = 3;}
+  if (key == 'g' || key == 53) {cannon = 4;}
+  if (key == 'h' || key == 54) {cannon = 5;}
+  if (key == 'j' || key == 55) {cannon = 6;}
+  if (key == 'k' || key == 56) {cannon = 7;}
+  if (key == 'l' || key == 57) {cannon = 8;}
+  if (key == ';' || key == 48) {cannon = 9;}
+  
+  if (cannon<=cannons.size()) {cannons.get(cannon).fireCannon();}
 }
