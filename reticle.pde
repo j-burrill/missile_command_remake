@@ -11,9 +11,9 @@ class Reticle {
   color tintC = color(255);
   int currentColourIndex = 0;
   int flashTimer = 0;
-  int flashDelay = cfg.getInt("colourFlashFrameDelay"); // amount of frames between the reticle changing colour
+  int flashDelay = cfg.getInt("level_colourFlashFrameDelay"); // amount of frames between the reticle changing colour
 
-  boolean reticle_debugEnabled = cfg.getBoolean("reticle_debug");
+  boolean reticle_debugEnabled = cfg.getBoolean("debug_reticle");
 
 
   Reticle( int ix, int iy, Missile parent ) {
@@ -37,14 +37,14 @@ class Reticle {
 
   void flash() { // every x frames update the colour to the next in the list
     flashTimer--;
+    if ( flashTimer <= 0 ) {
+      flashTimer = flashDelay;
+
+      tintC = getColour( currentColourIndex = nextIndex( currentColourIndex ) );
+    }
     if (reticle_debugEnabled) {
       println("reticle flashTimer: "+flashTimer);
       println("reticle currentColourIndex: "+currentColourIndex);
-    }
-    if ( flashTimer <= 0 ) {
-      flashTimer = flashDelay;
-      currentColourIndex = nextColour(currentColourIndex);
-      tintC = colourArray[currentColourIndex];
     }
   }
 }

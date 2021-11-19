@@ -1,19 +1,23 @@
 {
+	"debug_game": false,
+	"debug_reticle": false,
+	"debug_missile": true,
+	"debug_cannon": false,
+	"debug_tracer": false,
+	
 	"level_floorHeight": 20,
-	"cannonCount": 10,
-	"mountain_levelH": 15,
-	"mountain_levels": 4,
-	"mountain_startW": 120,
+	"level_colourFlashFrameDelay": 3,
 	
-	"colourFlashFrameDelay": 3,
+	"cannon_cannonCount": 3,
+	"cannon_mountain_levelH": 15,
+	"cannon_mountain_levels": 4,
+	"cannon_mountain_startW": 120,
 	
-	"game_debug": false,
-	"reticle_debug": false,
-	"missile_debug": false,
-	"cannon_debug": true,
+	
 	
 	"missile_splitMissileCount": 2,
-	"missile_splitMissileChance": 800,
+	"missile_splitMissileChance": 400,
+	"missile_splitMissileCutoff": 200,
 	"missile_player_jump": 15,
 	"missile_player_delay": 16,
 	"missile_player_size": 8,

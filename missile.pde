@@ -19,11 +19,9 @@ class Missile {
   float missileLength = 8; // size of missile
   int missileMoveDelay = 16; // how often it moves
   int splitTimer;
-  int childCount = 0;
-
+  
   boolean playerMissile;
-  boolean isSplit = false;
-  boolean missile_debugEnabled = cfg.getBoolean("missile_debug");
+  boolean missile_debugEnabled = cfg.getBoolean("debug_missile");
 
 
 
@@ -48,15 +46,8 @@ class Missile {
 
   //      this( ipath_start, ipath_finish, pMissile, null );
   //  }
-  
+
   void display() { // draw my missiles
-
-    if (isSplit) {
-      if (missile_debugEnabled) {
-        println("missile childCount: " + childCount);
-      }
-    };
-
     stroke(lineColour);
     strokeWeight(lineWidth);
     line(missile_tail.x, missile_tail.y, missile_nose.x, missile_nose.y); // draw the missile itself
@@ -64,7 +55,7 @@ class Missile {
     checkDestination(); // also check to see if it's reached it destination every frame
 
     if ( !playerMissile ) { // if it's an enemy missile, check for collision with fireballs. player missiles aren't affected by the fireballs
-      final int missileSplitCutoff = 150; // missiles won't split past a certain height
+      int missileSplitCutoff = cfg.getInt("missile_splitMissileCutoff"); // missiles won't split past a certain height
       if ( missile_nose.y < height - floorHeight - missileSplitCutoff) {
         checkSplitMissile(); // chance to split missile each frame
       }
@@ -75,7 +66,7 @@ class Missile {
     }
   }
 
-    void checkSplitMissile() {
+  void checkSplitMissile() {
     if ( millis() > splitTimer ) { // split enemies every x milliseconds
       int chance = cfg.getInt("missile_splitMissileChance"); // lower number means more likely to split, default = 1000
       int result = int(random(-10, chance - missile_nose.y/3));
@@ -87,7 +78,6 @@ class Missile {
 
       if ( result < 0 ) {
         int splitMissileCount = cfg.getInt("missile_splitMissileCount"); // how many missiles it splits into
-        childCount = splitMissileCount;
         splitMissile( splitMissileCount );
         result = 1;
       }
@@ -96,22 +86,35 @@ class Missile {
   }
 
   void splitMissile( int count ) {
-    isSplit = true;
-    keepTracerPos();
     for ( int i = 0; i < count; i++ ) {
-      int finishx = 0;
-
+      int finishx = newMissileTarget();
       while ( finishx <= 0 || finishx > width ) { // recalculate if the target is out of bounds
         finishx = newMissileTarget();
+        //if (missile_debugEnabled) {
+        //  println("missile finishx: " + finishx);
+        //}
       }
 
-      Point spawn = new Point( missile_nose.x, missile_nose.y );
       Point finish = new Point( finishx, height );
-      spawnEnemyMissile( spawn, finish, this );
+      finish = new Point( width/2, height );
+      spawnEnemyMissile( missile_nose, finish, this );
     }
 
     killMissile();
     //println(splitPos.x, splitPos.y);
+  }
+
+  int newMissileTarget() {
+    int distFromBottom = height - int(missile_nose.y);
+    int newFinishOffset = distFromBottom / 4;
+    int finishx = int( missile_nose.x + random( -newFinishOffset, newFinishOffset ) );
+    
+    if (missile_debugEnabled) {
+      println("distFromBottom: " + distFromBottom + " newFinishOffset: " + newFinishOffset);
+      println("missile finishx: " + finishx);
+    }
+    
+    return finishx;
   }
 
   void checkTimer() {
@@ -198,23 +201,5 @@ class Missile {
   void killMissile() { // if it's off the screen it doesn't get drawn, so this gets rid of it
     missile_tail.x = width+100;
     missile_nose.x = width+100;
-    if (parentMissile != null) {
-      parentMissile.childCount--;
-    }
-  }
-
-
-
-  void keepTracerPos() {
-    if ( !playerMissile && missile_tail.x < width ) {
-      splitPos = missile_tail;
-    }
-  }
-
-  int newMissileTarget() {
-    int distFromBottom = height - int(missile_nose.y);
-    int newFinishOffset = distFromBottom / 4;
-    int finishx = int( missile_nose.x + random( -newFinishOffset, newFinishOffset ) );
-    return finishx;
   }
 }

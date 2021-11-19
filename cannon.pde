@@ -3,9 +3,9 @@
  */
 
 class Cannon {
-  int mountain_levelH = cfg.getInt("mountain_levelH"); // these are for the mountain
-  int mountain_levels = cfg.getInt("mountain_levels");
-  int mountain_startW = cfg.getInt("mountain_startW");
+  int mountain_levelH = cfg.getInt("cannon_mountain_levelH"); // these are for the mountain
+  int mountain_levels = cfg.getInt("cannon_mountain_levels");
+  int mountain_startW = cfg.getInt("cannon_mountain_startW");
 
   int cannonNumber;
   int xPos;
@@ -68,6 +68,4 @@ class Cannon {
     int distBetweenMountains = width/cannonCount;
     return distBetweenMountains/2 + distBetweenMountains*(cannonNumber)+1;
   }
-
- 
 }

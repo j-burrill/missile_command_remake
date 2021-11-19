@@ -8,7 +8,9 @@ class Tracer {
   Missile missile;
   boolean playerTracer;
   color tracerColour = color( 161, 20, 10 ); // red for enemy
-  
+
+  boolean tracer_debugEnabled = cfg.getBoolean("debug_tracer");
+
 
   Tracer( Missile im, boolean iplayer ) {
     missile = im;
@@ -21,8 +23,8 @@ class Tracer {
 
   void display() {
     update();
-    
-    if ( !missile.isSplit && end.x < width || missile.isSplit && missile.childCount > 0 ) {
+
+    if ( end.x < width && end.x > 0 ) {
       stroke(tracerColour);
       strokeWeight(2);
       line( start.x, start.y, end.x, end.y );
@@ -32,7 +34,8 @@ class Tracer {
   void update() {
     start = missile.path_start;
     end = ( playerTracer ) ? missile.missile_tail : missile.splitPos; // take different variable if it's a player or enemy missile
-    //println(end.x);
+    if ( tracer_debugEnabled ) {
+      println("tracer end.x: " + end.x);
+    }
   }
-
 }
