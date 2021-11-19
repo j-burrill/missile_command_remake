@@ -28,8 +28,8 @@ void draw() {
   for (int i = 0; i<missiles.size(); i++) { // do the following for each missile
     Missile m = missiles.get(i);
     if ( m.missile_nose.x < width && m.missile_nose.x > 0 ) { // don't draw if it's outside of the screen, this is important because i kill the missiles by putting them outside
-      m.checkTimer(); // move missile when it's timer runs out
-      m.display(); // display on each flame
+      m.checkUpdateTimer(); // move missile when it's timer runs out
+      m.display(); // display on each frame
     }
     //println("drawing line: starting x: " + a.startX + " starting y: "+ a.startY + " ending x: " + a.endX + " ending y: "+ a.endY);
   }
@@ -50,7 +50,8 @@ void draw() {
     Point spawn = new Point( int(random(0, width)), 0);
     Point finish = new Point( targetX, height );
     spawnEnemyMissile( spawn, finish, null );
-    enemyTimer = millis() + 1800; //1800
+    int enemySpawnDelay = cfg.getInt("missile_enemySpawnDelay");
+    enemyTimer = millis() + enemySpawnDelay; //1800
   }
 
   if ( menuOpen ) {

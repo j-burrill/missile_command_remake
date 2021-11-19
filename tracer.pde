@@ -23,8 +23,7 @@ class Tracer {
 
   void display() {
     update();
-
-    if ( end.x < width && end.x > 0 ) {
+    if ( end.x < width && end.x > 0 && start.x < width && start.x > 0 ) {
       stroke(tracerColour);
       strokeWeight(2);
       line( start.x, start.y, end.x, end.y );
@@ -33,7 +32,7 @@ class Tracer {
 
   void update() {
     start = missile.path_start;
-    end = ( playerTracer ) ? missile.missile_tail : missile.splitPos; // take different variable if it's a player or enemy missile
+    end = missile.missile_tail;
     if ( tracer_debugEnabled ) {
       println("tracer end.x: " + end.x);
     }

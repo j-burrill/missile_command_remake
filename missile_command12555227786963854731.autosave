@@ -96,7 +96,7 @@ void newMissile( Point start, Point finish, boolean player, Missile parent ) {
 
 void spawnEnemyMissile( Point spawn, Point finish, Missile parent ) {
   // enemies are just missiles but a bit different
-  println("new missile finish.x: " + finish.x + " finish.y: " + finish.y);
+  //println("new missile finish.x: " + finish.x + " finish.y: " + finish.y);
   newMissile( spawn, finish, false, parent );
 }
 
@@ -137,8 +137,7 @@ void mousePressed() {
   if ( menuOpen ) { // when reseting game:
     menuOpen = false; // close menu
     score = 0; // reset score
-    int enemyStartingSpawnDelay = cfg.getInt("missile_enemyStartingSpawnDelay");
-    enemyTimer = millis() + enemyStartingSpawnDelay; // delay before starting
+    enemyTimer = millis() + 2000; // delay before starting
     resetScreen();
     for ( int i = 0; i < cannons.size(); i++ ) { // reset ammo
       Cannon c = cannons.get(i);

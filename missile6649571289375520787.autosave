@@ -71,7 +71,7 @@ class Missile {
     if ( millis() > splitTimer ) { // split enemies every x milliseconds
     int chance = cfg.getInt("missile_splitMissileChance");
     int result = int(random(-10, chance));
-    //println(result);
+    println(result);
       if (result<0) {
         result=1;
         splitTimer += splitDelay;
