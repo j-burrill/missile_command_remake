@@ -23,7 +23,7 @@ class Tracer {
 
   void display() {
     update();
-    if ( end.x < width && end.x > 0 && start.x < width && start.x > 0 ) {
+    if ( missile.isOnScreen() ) {
       stroke(tracerColour);
       strokeWeight(2);
       line( start.x, start.y, end.x, end.y );

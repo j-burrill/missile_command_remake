@@ -27,7 +27,7 @@ void draw() {
 
   for (int i = 0; i<missiles.size(); i++) { // do the following for each missile
     Missile m = missiles.get(i);
-    if ( m.missile_nose.x < width && m.missile_nose.x > 0 ) { // don't draw if it's outside of the screen, this is important because i kill the missiles by putting them outside
+    if ( m.isOnScreen() ) { // don't draw if it's outside of the screen, this is important because i kill the missiles by putting them outside
       m.checkUpdateTimer(); // move missile when it's timer runs out
       m.display(); // display on each frame
     }
@@ -66,7 +66,7 @@ void draw() {
      */
     String scoretxt = "Score: " + score;
     String hscoretxt = "Highscore: " + hscore;
-    String tutorialtxt = "Use 1, 2, 3 or A, S, D to fire your missiles";
+    String tutorialtxt = "Use number keys or home row keys to fire your missiles";
     String menutxt = "Click to start"+menuTxt2();
 
 

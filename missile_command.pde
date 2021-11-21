@@ -1,5 +1,5 @@
 /*
-  Justin Burrill
+Justin Burrill
  Nov 02 2021
  Missile command for the Atari recreation
  
@@ -26,14 +26,14 @@ boolean menuOpen = true;
 int score, hscore;
 
 color dirtColour, backgroundColour;
-color black = color( 0 );
-color white = color( 255 );
-color red = color( 255, 0, 0 );
-color pink = color( 255, 0, 242 );
-color blue = color( 0, 0, 255 );
-color green = color( 0, 255, 0 );
-color cyan = color( 0, 255, 247 );
-color yellow = color( 255, 251, 0 );
+color black = color(0);
+color white = color(255);
+color red = color(255, 0, 0);
+color pink = color(255, 0, 242);
+color blue = color(0, 0, 255);
+color green = color(0, 255, 0);
+color cyan = color(0, 255, 247);
+color yellow = color(255, 251, 0);
 color[] colourArray = { black, white, yellow, pink, red, cyan, green, blue };
 
 boolean cannon_debugEnabled;
@@ -55,13 +55,13 @@ void setup() {
   menuUpdateDelay = cfg.getInt("menu_textUpdateDelay");
   cannon_debugEnabled = cfg.getBoolean("debug_cannon");
 
-
   size(800, 800);
-  for (int i = 0; i<cannonCount; i++) {
+
+  for (int i = 0; i < cannonCount; i++) {
     //println("new cannon made");
-    cannons.add( new Cannon( i ) ); // make my cannons
+    cannons.add(new Cannon(i)); // make my cannons
   }
-  if ( cannonCount > 10 || cannonCount < 1 ) {
+  if (cannonCount > 10 || cannonCount < 1) {
     println("cannon count out of bounds");
   }
 }
@@ -72,82 +72,82 @@ String menuTxt2() { // this handles the fun little animation on the main menu
 
   if (currentMenuUpdateDelay <= 0) {
     menuText2 = periodArray[menuIndex];
-    menuIndex = (menuIndex != periodArray.length-1) ? menuIndex+1 : 0 ;
-    currentMenuUpdateDelay=menuUpdateDelay;
+    menuIndex = (menuIndex != periodArray.length - 1) ? menuIndex + 1 : 0;
+    currentMenuUpdateDelay = menuUpdateDelay;
   }
 
   return menuText2;
 }
 
 void resetScreen() {
-  missiles.clear(); // clear everything off screen
+  missiles.clear(); //clear everything off screen
   fireballs.clear();
   tracers.clear();
 }
 
-void newMissile( Point start, Point finish, boolean player, Missile parent ) {
-  Missile m = new Missile( start, finish, player, parent );
-  missiles.add( m ); // make a new missile in my array
-  spawnTracer( m, player ); // new tracer with the missile as its parent
+void newMissile(Point start, Point finish, boolean player, Missile parent) {
+  Missile m = new Missile(start, finish, player, parent);
+  missiles.add(m); // makea new missile in my array
+  spawnTracer(m, player); // new tracer with the missile as its parent
   if (player) {
     newReticle(m);
   } // only the player's missiles get reticles
 }
 
-void spawnEnemyMissile( Point spawn, Point finish, Missile parent ) {
-  // enemies are just missiles but a bit different
-  println("new missile finish.x: " + finish.x + " finish.y: " + finish.y);
-  newMissile( spawn, finish, false, parent );
+void spawnEnemyMissile(Point spawn, Point finish, Missile parent) {
+  //enemies are just missiles but a bit different
+  // println("new missile finish.x: " + finish.x + " finish.y: " + finish.y);
+  newMissile(spawn, finish, false, parent);
 }
 
-void newReticle( Missile m ) {
-  //if (game_debugEnabled) {
-  //  println("new reticle created");
+void newReticle(Missile m) {
+  // if (game_debugEnabled) {
+  //println("new reticle created");
   //}
-  Reticle r = new Reticle( mouseX, mouseY, m ); // make a new reticle where the mouse is and tie it to the missile
+  Reticle r = new Reticle(mouseX, mouseY, m); // make a new reticle where the mouse is and tie it to the missile
   reticles.add(r); // add it to the array
 }
 
-void newFireball( int x, int y, int size ) {
+void newFireball(int x, int y, int size) {
   //println("fireball made");
-  fireballs.add( new Fireball( x, y, size ) ); // make a new object for each fireball and and to array
+  fireballs.add(new Fireball(x, y, size)); // make a new object for each fireball and and to array
 }
 
-void spawnTracer( Missile m, boolean player ) {
-  Tracer t = new Tracer( m, player );
-  tracers.add( t );
+void spawnTracer(Missile m, boolean player) {
+  Tracer t = new Tracer(m, player);
+  tracers.add(t);
 }
 
 void drawCentreLine() { // used for making sure my cannons are in the right spots and stuff
   stroke(255);
   strokeWeight(2);
-  line(width/2, 0, width/2, height);
+  line(width / 2, 0, width / 2, height);
 }
 
-int nextIndex( int in ) {
-  int out = in != colourArray.length-1? in+1 : 0 ;
+int nextIndex(int in) {
+  int out = in != colourArray.length - 1 ? in + 1 : 0;
   return out;
 }
 
-color getColour( int index ) {
+color getColour(int index) {
   return colourArray[index];
 }
 
 void mousePressed() {
-  if ( menuOpen ) { // when reseting game:
+  if (menuOpen) { // when reseting game:
     menuOpen = false; // close menu
     score = 0; // reset score
     int enemyStartingSpawnDelay = cfg.getInt("missile_enemyStartingSpawnDelay");
-    enemyTimer = millis() + enemyStartingSpawnDelay; // delay before starting
+    enemyTimer = millis() + enemyStartingSpawnDelay;// delay before starting
     resetScreen();
-    for ( int i = 0; i < cannons.size(); i++ ) { // reset ammo
+    for (int i = 0; i < cannons.size(); i++) { // reset ammo
       Cannon c = cannons.get(i);
       c.reset();
     }
   }
 }
 
-void keyPressed() { // check what button is pressed
+void keyPressed() { // checkwhat button is pressed
   findKey(key); // in cannon
 }
 
@@ -155,7 +155,7 @@ void findKey(int key) {
   if (cannon_debugEnabled) {
     println(key);
   }
-  int cannon=0;
+  int cannon = 0;
   if (key == 'a' || key == 49) {
     cannon = 0;
   }
@@ -187,7 +187,7 @@ void findKey(int key) {
     cannon = 9;
   }
 
-  if (cannon<=cannons.size()) {
+  if (cannon <=  cannons.size()) {
     cannons.get(cannon).fireCannon();
   }
 }

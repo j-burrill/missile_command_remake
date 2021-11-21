@@ -8,6 +8,7 @@ class Missile {
   Point path_finish;
   Point missile_tail;
   Point missile_nose;
+  Point killPos;
   Missile parentMissile; // enemy missiles that are spawned from a split are given a parent missile so I can make the tracer from the original missile stay and get destr
 
   int timer = 0;
@@ -55,7 +56,7 @@ class Missile {
     if ( !playerMissile ) { // if it's an enemy missile, check for collision with fireballs. player missiles aren't affected by the fireballs
       int missileSplitCutoff = cfg.getInt("missile_splitMissileCutoff"); // missiles won't split past a certain height above the floor
       if ( missile_nose.y < height - floorHeight - missileSplitCutoff) {
-        checkSplitMissileTimer(); // chance to split missile each frame
+        checkSplitMissile(); // chance to split missile each frame
       }
 
       for (int i = 0; i<fireballs.size(); i++) { // check collision with each fireball on the screen
@@ -65,24 +66,31 @@ class Missile {
     }
   }
 
-  void checkSplitMissileTimer() {
+  void checkSplitMissile() {
 
     int splitDelay = 1000;
-    if ( millis() > splitTimer ) { // split enemies every x milliseconds
-    int chance = cfg.getInt("missile_splitMissileChance");
-    int result = int(random(-10, chance));
-    //println(result);
-      if (result<0) {
+    if ( millis() > splitTimer ) { // check to split enemies every x milliseconds
+
+      splitTimer += splitDelay; // reset split timer
+
+      int chance = cfg.getInt("missile_splitMissileChance"); // get chance to split from cfg
+      int result = int(random(-10, chance)); // random chance to split the missile
+
+      if (missile_debugEnabled) {
+        println(result);
+      }
+
+      if (result < 0) {
         result=1;
-        splitTimer += splitDelay;
         splitMissile();
+        killMissile();
       }
     }
   }
 
   void splitMissile() {
     int splitCount = cfg.getInt("missile_splitMissileCount");
-    for (int i=0; i<splitCount; i++) {
+    for (int i=0; i<splitCount; i++) { // spawn x missiles
       spawnSplitMissile();
     }
   }
@@ -90,7 +98,7 @@ class Missile {
   void spawnSplitMissile() {
     int newFinishX = int(getNewMissileTarget());
     Point finish = new Point( newFinishX, height );
-    spawnEnemyMissile( missile_nose, finish, this );
+    spawnEnemyMissile( killPos, finish, this );
   }
 
   float getNewMissileTarget() {
@@ -110,7 +118,6 @@ class Missile {
     }
   }
 
-
   void update() {
     // this math finds the next position for my line
     float deltaX_total = path_finish.x - path_start.x;
@@ -128,6 +135,10 @@ class Missile {
 
     missile_tail.x = missile_nose.x - deltaX_missile;
     missile_tail.y = missile_nose.y - deltaY_missile;
+
+    if ( isOnScreen() ) {
+      killPos = missile_nose;
+    }
   }
 
   void checkDestination() {
@@ -175,10 +186,8 @@ class Missile {
     float xDelta = f.pos.x - missile_nose.x;
     float yDelta = f.pos.y - missile_nose.y;
     float hyp = sqrt( sq(xDelta) + sq(yDelta) );
-
     if ( f.size/2 > hyp ) { // if missile enters fireball, kill it
       //println("missile killed by fireball");
-
       return true;
     } else return false;
   }
@@ -186,5 +195,12 @@ class Missile {
   void killMissile() { // if it's off the screen it doesn't get drawn, so this gets rid of it
     missile_tail.x = width+100;
     missile_nose.x = width+100;
+  }
+
+  boolean isOnScreen() { // check if the missile is on the screen
+    if (missile_nose.x < width && missile_nose.x > 0
+      && missile_nose.y < height && missile_nose.y > -2) {
+      return true;
+    } else return false;
   }
 }
