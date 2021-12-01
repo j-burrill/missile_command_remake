@@ -5,8 +5,10 @@
 	"debug_cannon": false,
 	"debug_tracer": false,
 	
-	"level_floorHeight": 20,
-	"level_colourFlashFrameDelay": 3,
+	"game_floorHeight": 20,
+	"game_colourFlashFrameDelay": 3,
+	"game_spawnEnemies": true,
+	
 	
 	"cannon_cannonCount": 3,
 	"cannon_mountain_levelH": 15,
@@ -14,6 +16,8 @@
 	"cannon_mountain_startW": 120,
 	"cannon_defaultAmmo": 50,
 	
+	"missile_splitEnabled": false,
+	"missile_collideEnabled": true,
 	"missile_enemyStartingSpawnDelay": 2000,
 	"missile_enemySpawnDelay": 2000,
 	"missile_splitMissileCount": 2,

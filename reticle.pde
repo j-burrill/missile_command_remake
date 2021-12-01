@@ -3,7 +3,7 @@
  */
 
 class Reticle {
-  PImage crossimg = loadImage("crosshair.png");
+  PImage crossImg = loadImage("crosshair.png");
   int x, y;
   int imgSize = 15;
   Missile parentMissile;
@@ -11,7 +11,7 @@ class Reticle {
   color tintC = color(255);
   int currentColourIndex = 0;
   int flashTimer = 0;
-  int flashDelay = cfg.getInt("level_colourFlashFrameDelay"); // amount of frames between the reticle changing colour
+  int flashDelay = cfg.getInt("game_colourFlashFrameDelay"); // amount of frames between the reticle changing colour
 
   boolean reticle_debugEnabled = cfg.getBoolean("debug_reticle");
 
@@ -26,7 +26,7 @@ class Reticle {
     flash();
     checkParent();
     tint(tintC);
-    image( crossimg, x-imgSize/2, y-imgSize/2, imgSize, imgSize ); // the reticle is actually an image
+    image( crossImg, x-imgSize/2, y-imgSize/2, imgSize, imgSize ); // the reticle is actually an image
   }
 
   void checkParent() {

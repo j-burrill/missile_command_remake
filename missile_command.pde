@@ -4,17 +4,20 @@ Justin Burrill
  Missile command for the Atari recreation
  
  to do:
- make the tracer stay after the line splits currently the splitpos follows the tail pos offscreen
+ *** fix missile split
+   make the tracer stay after the line splits currently the splitpos follows the tail pos offscreen
+ 
  find better system for cannon controls
  make levels and proper system
  make colours change with waves/levels
  */
 
-ArrayList<Missile> missiles = new ArrayList<Missile>(); // list of all my missiles
-ArrayList<Fireball> fireballs = new ArrayList<Fireball>(); // list of all my fireballs
-ArrayList<Cannon> cannons = new ArrayList<Cannon>(); // list of all my fireballs
-ArrayList<Tracer> tracers = new ArrayList<Tracer>(); // list of all my tracers
-ArrayList<Reticle> reticles = new ArrayList<Reticle>(); // list of all my reticles
+ArrayList<Missile> missiles = new ArrayList<Missile>(); // lists for each object that needs to be updated each frame
+ArrayList<Fireball> fireballs = new ArrayList<Fireball>();
+ArrayList<Cannon> cannons = new ArrayList<Cannon>();
+ArrayList<Tracer> tracers = new ArrayList<Tracer>();
+ArrayList<Reticle> reticles = new ArrayList<Reticle>();
+ArrayList<Plane> planes = new ArrayList<Plane>();
 
 JSONObject cfg; // some settings are written in a json file
 
@@ -47,13 +50,15 @@ String menuText2;
 
 void setup() {
   cfg = loadJSONObject("cfg.json"); // get settings from the json file
-  floorHeight = cfg.getInt("level_floorHeight");
+  floorHeight = cfg.getInt("game_floorHeight");
   cannonCount = cfg.getInt("cannon_cannonCount");
   backgroundColour = color(0); // (0)
   dirtColour = color(125, 83, 54); // (color(125, 83, 54)
   game_debugEnabled = cfg.getBoolean("debug_game");
   menuUpdateDelay = cfg.getInt("menu_textUpdateDelay");
   cannon_debugEnabled = cfg.getBoolean("debug_cannon");
+  
+  planes.add( new Plane() );
 
   size(800, 800);
 

@@ -12,7 +12,7 @@ class Fireball {
 
   int currentColourIndex = 0;
   int flashTimer = 0;
-  int flashDelay = cfg.getInt("level_colourFlashFrameDelay"); // amount of frames between the reticle changing colour
+  int flashDelay = cfg.getInt("game_colourFlashFrameDelay"); // amount of frames between the reticle changing colour
 
 
   Fireball(int ix, int iy, int isize) {

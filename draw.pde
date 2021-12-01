@@ -19,6 +19,12 @@ void draw() {
     Cannon c = cannons.get(i);
     c.display();
   }
+  
+  for (int i = 0; i<planes.size(); i++) { // display all my fireballs each frame
+    Plane p = planes.get(i);
+    //println("drawing plane");
+    //p.display();
+  }
 
   for (int i = 0; i<fireballs.size(); i++) { // display all my fireballs each frame
     Fireball f = fireballs.get(i);
@@ -41,8 +47,10 @@ void draw() {
     Reticle r = reticles.get(i);
     r.display();
   }
-
-  if ( millis() > enemyTimer && !menuOpen ) { // spawn enemies every x milliseconds if menu is closed
+  
+  boolean spawnEnemiesEnabled = cfg.getBoolean("game_spawnEnemies");
+  
+  if ( spawnEnemiesEnabled && millis() > enemyTimer && !menuOpen ) { // spawn enemies every x milliseconds if menu is closed
     //println("enemytimer ran out");
     int borderOffset = 80; // no missiles right on the edge of the screen
     int targetX = int(random(borderOffset, width-borderOffset)); // pick a random point on the ground to target

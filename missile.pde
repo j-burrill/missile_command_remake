@@ -28,6 +28,7 @@ class Missile {
   Missile( Point ipath_start, Point ipath_finish, boolean pMissile, Missile parent ) {
     path_start = ipath_start;
     path_finish = ipath_finish;
+    println("path_start.x updated");
     missile_tail = new Point( path_start.x, path_start.y );
     missile_nose = new Point( path_start.x, path_start.y ); // this avoids NPE
     playerMissile = pMissile;
@@ -54,14 +55,21 @@ class Missile {
     checkDestination(); // also check to see if it's reached it destination every frame
 
     if ( !playerMissile ) { // if it's an enemy missile, check for collision with fireballs. player missiles aren't affected by the fireballs
-      int missileSplitCutoff = cfg.getInt("missile_splitMissileCutoff"); // missiles won't split past a certain height above the floor
-      if ( missile_nose.y < height - floorHeight - missileSplitCutoff) {
-        checkSplitMissile(); // chance to split missile each frame
-      }
+      boolean missileSplitEnabled = cfg.getBoolean("missile_splitEnabled");
+      boolean missileCollideEnabled = cfg.getBoolean("missile_collideEnabled");
 
-      for (int i = 0; i<fireballs.size(); i++) { // check collision with each fireball on the screen
-        Fireball f = fireballs.get(i);
-        checkCollision(f);
+      if ( missileSplitEnabled ) {
+        int missileSplitCutoff = cfg.getInt("missile_splitMissileCutoff"); // missiles won't split past a certain height above the floor
+        if ( missile_nose.y < height - floorHeight - missileSplitCutoff) {
+          checkSplitMissile(); // chance to split missile each frame
+        }
+      }
+      
+      if ( missileCollideEnabled ) {
+        for (int i = 0; i<fireballs.size(); i++) { // check collision with each fireball on the screen
+          Fireball f = fireballs.get(i);
+          checkCollision(f);
+        }
       }
     }
   }
@@ -76,9 +84,9 @@ class Missile {
       int chance = cfg.getInt("missile_splitMissileChance"); // get chance to split from cfg
       int result = int(random(-10, chance)); // random chance to split the missile
 
-      if (missile_debugEnabled) {
-        println(result);
-      }
+      //if (missile_debugEnabled) {
+      //println(result);
+      //}
 
       if (result < 0) {
         result=1;
@@ -138,6 +146,12 @@ class Missile {
 
     if ( isOnScreen() ) {
       killPos = missile_nose;
+      if ( missile_debugEnabled ) {
+        println("updating killPos.x to: " + killPos.x);
+      }
+    }
+    if ( parentMissile != null ) {
+      println("missile startx, starty: ", path_start.x, path_start.y);
     }
   }
 
@@ -198,7 +212,7 @@ class Missile {
   }
 
   boolean isOnScreen() { // check if the missile is on the screen
-    if (missile_nose.x < width && missile_nose.x > 0
+    if (missile_nose.x < width && missile_nose.x > -2
       && missile_nose.y < height && missile_nose.y > -2) {
       return true;
     } else return false;
