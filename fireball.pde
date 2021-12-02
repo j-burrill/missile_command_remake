@@ -13,7 +13,7 @@ class Fireball {
   int currentColourIndex = 0;
   int flashTimer = 0;
   int flashDelay = cfg.getInt("game_colourFlashFrameDelay"); // amount of frames between the reticle changing colour
-
+  boolean enableColourFlash = cfg.getBoolean("fireball_enableColourFlash");
 
   Fireball(int ix, int iy, int isize) {
     pos = new Point( ix, iy );
@@ -28,7 +28,9 @@ class Fireball {
 
   void display() {
 
-    flash();
+    if (enableColourFlash) {
+      flash();
+    }
     // this controls the balls getting bigger, then growing back smaller
     timeDelta = time - millis();
     timeDelta2 = time2 - millis();

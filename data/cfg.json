@@ -1,14 +1,15 @@
 {
 	"debug_game": false,
 	"debug_reticle": false,
-	"debug_missile": true,
+	"debug_missile": false,
 	"debug_cannon": false,
 	"debug_tracer": false,
+	"debug_plane": true,
 	
 	"game_floorHeight": 20,
 	"game_colourFlashFrameDelay": 3,
 	"game_spawnEnemies": true,
-	
+	"game_spawnPlanes": true,
 	
 	"cannon_cannonCount": 3,
 	"cannon_mountain_levelH": 15,
@@ -30,5 +31,16 @@
 	"missile_enemy_delay": 16,
 	"missile_enemy_size": 10,
 	
-	"menu_textUpdateDelay": 40
+	"menu_textUpdateDelay": 40,
+	
+	"fireball_enableColourFlash": true,
+	"fireball_colourFlashFrameDelay": 3,
+	
+	"reticle_enableColourFlash": true,
+	"reticle_colourFlashFrameDelay": 3,
+	
+	"plane_enemyStartingSpawnDelay": 10,
+	"plane_enemySpawnDelay": 10000,
+	"plane_imgSize": 50
+
 }

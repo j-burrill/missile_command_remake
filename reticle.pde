@@ -12,7 +12,7 @@ class Reticle {
   int currentColourIndex = 0;
   int flashTimer = 0;
   int flashDelay = cfg.getInt("game_colourFlashFrameDelay"); // amount of frames between the reticle changing colour
-
+  boolean enableColourFlash = cfg.getBoolean("reticle_enableColourFlash");
   boolean reticle_debugEnabled = cfg.getBoolean("debug_reticle");
 
 
@@ -23,7 +23,9 @@ class Reticle {
   }
 
   void display() {
-    flash();
+    if (enableColourFlash) {
+      flash();
+    }
     checkParent();
     tint(tintC);
     image( crossImg, x-imgSize/2, y-imgSize/2, imgSize, imgSize ); // the reticle is actually an image

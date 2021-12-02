@@ -28,7 +28,9 @@ class Missile {
   Missile( Point ipath_start, Point ipath_finish, boolean pMissile, Missile parent ) {
     path_start = ipath_start;
     path_finish = ipath_finish;
-    println("path_start.x updated");
+    if (missile_debugEnabled) {
+      println("path_start.x updated");
+    }
     missile_tail = new Point( path_start.x, path_start.y );
     missile_nose = new Point( path_start.x, path_start.y ); // this avoids NPE
     playerMissile = pMissile;
@@ -64,7 +66,7 @@ class Missile {
           checkSplitMissile(); // chance to split missile each frame
         }
       }
-      
+
       if ( missileCollideEnabled ) {
         for (int i = 0; i<fireballs.size(); i++) { // check collision with each fireball on the screen
           Fireball f = fireballs.get(i);
@@ -150,7 +152,7 @@ class Missile {
         println("updating killPos.x to: " + killPos.x);
       }
     }
-    if ( parentMissile != null ) {
+    if ( parentMissile != null && missile_debugEnabled ) {
       println("missile startx, starty: ", path_start.x, path_start.y);
     }
   }

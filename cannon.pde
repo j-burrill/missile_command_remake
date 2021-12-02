@@ -3,7 +3,8 @@
  */
 
 class Cannon {
-  int mountain_levelH = cfg.getInt("cannon_mountain_levelH"); // these are for the mountain
+  // take mountain dimensions from the cfg file
+  int mountain_levelH = cfg.getInt("cannon_mountain_levelH");
   int mountain_levels = cfg.getInt("cannon_mountain_levels");
   int mountain_startW = cfg.getInt("cannon_mountain_startW");
 
@@ -25,6 +26,7 @@ class Cannon {
     if ( ammo > 0 && !menuOpen ) { // if your mouse is in the playing area, and you have ammo, and the game is running, fire missile
       Point start = new Point( xPos, yPos+mountain_levelH ); // need to subtract the height of one level because of the way i draw the mountain
       Point finish = new Point( mouseX, mouseY );
+      // spawn a new missile with the start at the cannon and the finish at the mouse
       newMissile( start, finish, true, null );
       ammo--; // lose one ammo for shooting
     }
