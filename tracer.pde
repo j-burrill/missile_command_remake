@@ -22,7 +22,9 @@ class Tracer {
   }
 
   void display() {
+    // update each frame
     update();
+    // don't draw if it's off-screen
     if ( missile.isOnScreen() ) {
       stroke(tracerColour);
       strokeWeight(2);
@@ -31,6 +33,7 @@ class Tracer {
   }
 
   void update() {
+    // get start and end from the missile
     start = missile.path_start;
     end = missile.missile_tail;
     if ( tracer_debugEnabled ) {

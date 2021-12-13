@@ -22,9 +22,6 @@ void draw() {
 
   for (int i = 0; i<planes.size(); i++) { // display all my planes each frame
     Plane p = planes.get(i);
-
-
-    //println("drawing plane");
     if (p.isOnScreen()) {
       p.display();
     }
@@ -56,7 +53,7 @@ void draw() {
   boolean spawnEnemiesEnabled = cfg.getBoolean("game_spawnEnemies");
   boolean spawnPlanesEnabled = cfg.getBoolean("game_spawnPlanes");
 
-  println( "enemyPlaneTimer:", enemyPlaneTimer, " millis():", millis() );
+  //println( "enemyPlaneTimer:", enemyPlaneTimer, " millis():", millis() );
 
   if ( spawnEnemiesEnabled && millis() > enemyMissileTimer && !menuOpen ) { // spawn enemies every x milliseconds if menu is closed
     //println("enemytimer ran out");
@@ -72,7 +69,9 @@ void draw() {
   }
 
   if ( spawnPlanesEnabled && millis() > enemyPlaneTimer && !menuOpen ) {
+
     int planeSize = cfg.getInt("plane_imgSize");
+    int forceSpawn = cfg.getInt("plane_forceSpawn");
     boolean rightSideSpawn = false;
     // get random y pos
     int spawnY = getYpos();
@@ -80,10 +79,17 @@ void draw() {
     int spawnX = -(planeSize);
     // either 1 or -1
     int random = -1 + int(random(2)) * 2;
+    // this is for debugging making the image flip
+    if (forceSpawn == 1) {
+      random=1;
+    } else if (forceSpawn == 2) {
+      random=-1;
+    }
     if (random == -1) {
       rightSideSpawn = true;
       spawnX = -spawnX+width;
     }
+
     int bombX = int(random(300, width-300));
     Point spawnPoint = new Point(spawnX, spawnY);
     spawnPlane(spawnPoint, bombX, rightSideSpawn);
@@ -104,7 +110,7 @@ void draw() {
     String scoretxt = "Score: " + score;
     String hscoretxt = "Highscore: " + hscore;
     String tutorialtxt = "Use number keys or home row keys to fire your missiles";
-    String menutxt = "Press enter to start"+menuTxt2();
+    String menutxt = "Press enter to start" + menuTxt2();
     String multiplayerInstructiontxt = "Press space to toggle multiplayer";
     String multiplayerEnabledtxt = "Multiplayer enabled: " + multiplayerEnabled;
 
@@ -114,7 +120,13 @@ void draw() {
     text(multiplayerInstructiontxt, centreText(multiplayerInstructiontxt), height/2+30);
     text(menutxt, centreText(menutxt), height/2+60);
     textSize(20);
-    text(multiplayerEnabledtxt, 5, 25);
+    text(multiplayerEnabledtxt, 5, 22);
+  } else if (!menuOpen) {
+    String scoretxt = "Score: " + score;
+    textSize(25);
+    fill(255);
+    text(scoretxt, 5, 30);
+
   }
 }
 

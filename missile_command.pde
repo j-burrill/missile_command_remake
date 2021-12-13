@@ -4,12 +4,17 @@ Justin Burrill
  Missile command for the Atari recreation
  
  to do:
+ *** make the score fade in the colour red or green depending
+ 
  *** fix missile split
  make the tracer stay after the line splits currently the splitpos follows the tail pos offscreen
+ ^^ then make another constructor that allows missiles to have a plane as a parent, basically the same issue as the split missile
+ 
  
  find better system for cannon controls
- make levels and proper system
+ make levels and proper system or make it harder as it goes on
  make colours change with waves/levels
+ 
  
  fix planes
  fix multiplayer
@@ -25,7 +30,7 @@ ArrayList<Plane> planes = new ArrayList<Plane>();
 
 // some settings are written in a json file, object is created here
 JSONObject cfg;
-
+// create certain variables that need to be accessed globally
 boolean game_debugEnabled;
 boolean multiplayerEnabled;
 
@@ -35,7 +40,6 @@ boolean menuOpen = true;
 int score, hscore;
 
 color dirtColour, backgroundColour;
-
 color[] colourArray = new color[8];
 
 boolean cannon_debugEnabled;
@@ -52,12 +56,13 @@ void setup() {
   cfg = loadJSONObject("cfg.json");
   floorHeight = cfg.getInt("game_floorHeight");
   cannonCount = cfg.getInt("cannon_cannonCount");
-  backgroundColour = color(0); // (0)
-  dirtColour = color(125, 83, 54); // (color(125, 83, 54)
   game_debugEnabled = cfg.getBoolean("debug_game");
   menuUpdateDelay = cfg.getInt("menu_textUpdateDelay");
   cannon_debugEnabled = cfg.getBoolean("debug_cannon");
+  multiplayerEnabled = cfg.getBoolean("game_multiplayerDefault");
 
+  backgroundColour = color(0); // (0)
+  dirtColour = color(125, 83, 54); // (color(125, 83, 54)
 
   // size of the window
   size(800, 800);
@@ -232,4 +237,8 @@ void findKey(int key) {
   if (cannonPicked != -1 && cannonPicked <= cannons.size()) {
     cannons.get(cannonPicked).fireCannon();
   }
+}
+
+void addScore(int amt) {
+  score+=amt;
 }

@@ -50,11 +50,12 @@ class Missile {
   //  }
 
   void display() { // draw my missiles
+    checkDestination(); // also check to see if it's reached it destination every frame
+
     stroke(lineColour);
     strokeWeight(lineWidth);
-    line(missile_tail.x, missile_tail.y, missile_nose.x, missile_nose.y); // draw the missile itself
+    line(missile_tail.x, missile_tail.y, missile_nose.x, missile_nose.y); // draw the missile
 
-    checkDestination(); // also check to see if it's reached it destination every frame
 
     if ( !playerMissile ) { // if it's an enemy missile, check for collision with fireballs. player missiles aren't affected by the fireballs
       boolean missileSplitEnabled = cfg.getBoolean("missile_splitEnabled");
@@ -187,9 +188,12 @@ class Missile {
   void checkCollision( Fireball f ) {
     // check to see if enemy missile should be destroyed by my fireball
     if ( isCollide( f ) ) { // if they collide, kill the missile and give score and stuff
+      int fireballSize = cfg.getInt("missile_enemy_fireBallSize");
 
-      score += 100;
-      newFireball( int(missile_nose.x), int(missile_nose.y), 70 ); // little fireball after you destroy a missile
+      int scoreForDestroying = cfg.getInt("missile_enemy_scoreForDestroying");
+      addScore(scoreForDestroying);
+
+      newFireball( int(missile_nose.x), int(missile_nose.y), fireballSize ); // little fireball after you destroy a missile
 
       killMissile();
     }

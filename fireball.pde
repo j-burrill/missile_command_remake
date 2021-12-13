@@ -19,7 +19,8 @@ class Fireball {
     pos = new Point( ix, iy );
 
     maxSize = isize;
-    fbLifetime = maxSize/50; // fireball lifetime is proportionate to its size
+    int divider = cfg.getInt("fireball_lifetimeDivider");
+    fbLifetime = maxSize/divider; // fireball lifetime is proportionate to its size
 
     // adjust how long the fireball stays for
     time = millis() + fbLifetime*1000;
@@ -50,7 +51,7 @@ class Fireball {
     }
   }
 
-  void kill() {
+  void killFireball() {
     pos.x = width+200; // shove it offscreen so it doesn't affect the game
   }
 

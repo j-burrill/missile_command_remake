@@ -27,8 +27,9 @@ class Reticle {
       flash();
     }
     checkParent();
+    // the base image is white and i use tint() to control its colour
     tint(tintC);
-    image( crossImg, x-imgSize/2, y-imgSize/2, imgSize, imgSize ); // the reticle is actually an image
+    image( crossImg, x-imgSize/2, y-imgSize/2, imgSize, imgSize ); // the reticle is actually an image drawn here
   }
 
   void checkParent() {
