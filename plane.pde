@@ -1,3 +1,7 @@
+/*
+ this class is the for planes that fly across the screen and drop a bunch of missiles
+ */
+
 class Plane {
   int planeSpeed = cfg.getInt("plane_moveSpeed");
   Point planePos;
@@ -112,8 +116,11 @@ class Plane {
       if (planePos.y>0) { // so it only adds score once when it goes offscreen
         killPlane();
         // lose score if you let a plane escape w/out destroying it
-        addScore(-loss);
-        println(score);
+        if ( !menuOpen ) {
+          // don't lose score for letting planes escape if you've lost already because there isn't really anything you can do about it
+          addScore(-loss);
+        }
+        //println(actualScore);
       }
       return false;
     }

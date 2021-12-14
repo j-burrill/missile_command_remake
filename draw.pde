@@ -49,6 +49,13 @@ void draw() {
     r.display();
   }
 
+  for (int i = 0; i<texts.size(); i++) { // display all my tracers each frame
+    Score_text t = texts.get(i);
+    if (t.isOnScreen()) {
+      t.display();
+    }
+  }
+
   // only spawn enemies if it is enabled in the json
   boolean spawnEnemiesEnabled = cfg.getBoolean("game_spawnEnemies");
   boolean spawnPlanesEnabled = cfg.getBoolean("game_spawnPlanes");
@@ -98,17 +105,18 @@ void draw() {
     enemyPlaneTimer = millis() + planeSpawnDelay; //1800
   }
 
+  String scoretxt = "Score: " + displayScore;
+
   if ( menuOpen ) {
-    if ( score>hscore ) { //update highscore if you beat it
-      hscore=score;
+    if ( actualScore>highscore ) { //update highscore if you beat it
+      newHighScore();
     }
     fill(255);
     textSize(30);
 
 
     // draw all the text on my menu
-    String scoretxt = "Score: " + score;
-    String hscoretxt = "Highscore: " + hscore;
+    String hscoretxt = "Highscore: " + highscore;
     String tutorialtxt = "Use number keys or home row keys to fire your missiles";
     String menutxt = "Press enter to start" + menuTxt2();
     String multiplayerInstructiontxt = "Press space to toggle multiplayer";
@@ -122,11 +130,9 @@ void draw() {
     textSize(20);
     text(multiplayerEnabledtxt, 5, 22);
   } else if (!menuOpen) {
-    String scoretxt = "Score: " + score;
     textSize(25);
     fill(255);
     text(scoretxt, 5, 30);
-
   }
 }
 
@@ -134,4 +140,28 @@ int centreText( String txt ) {
   //this centers the score to the middle of the screen constantly by getting its width
 
   return int(width/2-textWidth(txt)/2);
+}
+
+void newHighScore() {
+  highscore=actualScore; // set the highscore to your new score
+
+  
+  // array of all my high scores already in the file
+  String[] scores = loadStrings("highscores.txt");
+  // new printwriter object
+  PrintWriter output;
+  output = createWriter("highscores.txt");
+
+  // write each line in the file back into it, because it gets cleared when i make the printwriter
+  for (int i = 0; i<scores.length; i++) {
+    output.println(scores[i]);
+  }
+  
+  // add new highscore to the file
+  output.println(highscore);
+
+  
+  output.flush(); // Writes the remaining data to the file
+  output.close(); // Finishes the file
+  println("writing to highscores file");
 }

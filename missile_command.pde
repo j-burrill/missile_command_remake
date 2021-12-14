@@ -4,20 +4,18 @@ Justin Burrill
  Missile command for the Atari recreation
  
  to do:
- *** make the score fade in the colour red or green depending
+ 
+ make high score save to a txt file with 3 letter initials or something
  
  *** fix missile split
  make the tracer stay after the line splits currently the splitpos follows the tail pos offscreen
  ^^ then make another constructor that allows missiles to have a plane as a parent, basically the same issue as the split missile
  
  
- find better system for cannon controls
+ 
  make levels and proper system or make it harder as it goes on
- make colours change with waves/levels
- 
- 
- fix planes
- fix multiplayer
+
+ finish multiplayer
  */
 
 // lists for each object that needs to be updated each frame
@@ -27,6 +25,8 @@ ArrayList<Cannon> cannons = new ArrayList<Cannon>();
 ArrayList<Tracer> tracers = new ArrayList<Tracer>();
 ArrayList<Reticle> reticles = new ArrayList<Reticle>();
 ArrayList<Plane> planes = new ArrayList<Plane>();
+ArrayList<Score_text> texts = new ArrayList<Score_text>();
+
 
 // some settings are written in a json file, object is created here
 JSONObject cfg;
@@ -37,7 +37,8 @@ boolean multiplayerEnabled;
 int floorHeight, cannonCount;
 int enemyMissileTimer = 0, enemyPlaneTimer = 0;
 boolean menuOpen = true;
-int score, hscore;
+int actualScore, highscore;
+int displayScore = 0;
 
 color dirtColour, backgroundColour;
 color[] colourArray = new color[8];
@@ -49,6 +50,7 @@ int menuUpdateDelay;
 int currentMenuUpdateDelay = menuUpdateDelay;
 int menuIndex = 0;
 String menuText2;
+
 
 
 void setup() {
@@ -163,7 +165,7 @@ int nextIndex(int in) {
 }
 
 color getColour(int index) {
-  // return the colour in the array
+  // bunch of different colours in the array so the fireballs and stuff can cycle through it
   colourArray[0] = color(0);
   colourArray[1] = color(255);
   colourArray[2] = color(255, 0, 0);
@@ -172,13 +174,13 @@ color getColour(int index) {
   colourArray[5] = color(0, 255, 0);
   colourArray[6] = color(0, 255, 247);
   colourArray[7] = color(255, 251, 0);
-
+  // return the colour in the array
   return colourArray[index];
 }
 
 void startGame() {
   menuOpen = false; // close menu
-  score = 0; // reset score
+  actualScore = 0; displayScore = 0; // reset score
   int enemyStartingSpawnDelay = cfg.getInt("missile_enemyStartingSpawnDelay");
   int enemyPlaneStartingSpawnDelay = cfg.getInt("plane_enemyStartingSpawnDelay");
 
@@ -239,6 +241,12 @@ void findKey(int key) {
   }
 }
 
-void addScore(int amt) {
-  score+=amt;
+void addScore( int amount ) {
+  actualScore += amount;
+  newScoreText( amount );
+}
+
+void newScoreText( int amount ) {
+  Score_text t = new Score_text( amount );
+  texts.add(t);
 }

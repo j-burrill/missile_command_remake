@@ -20,7 +20,7 @@ class Fireball {
 
     maxSize = isize;
     int divider = cfg.getInt("fireball_lifetimeDivider");
-    fbLifetime = maxSize/divider; // fireball lifetime is proportionate to its size
+    fbLifetime = maxSize / divider; // fireball lifetime is proportionate to its size
 
     // adjust how long the fireball stays for
     time = millis() + fbLifetime*1000;
