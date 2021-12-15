@@ -10,8 +10,7 @@ void draw() {
 
   rect(0, height-floorHeight, width, floorHeight); // rectangle for the ground
 
-  for (int i = 0; i<tracers.size(); i++) { // display all my tracers each frame
-    Tracer t = tracers.get(i);
+  for ( Tracer t: tracers ) { // display all my tracers each frame
     t.display();
   }
 
