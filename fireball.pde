@@ -16,7 +16,7 @@ class Fireball {
   boolean enableColourFlash = cfg.getBoolean("fireball_enableColourFlash");
 
   Fireball(int ix, int iy, int isize) {
-    pos = new Point( ix, iy );
+    this.pos = new Point( ix, iy );
 
     maxSize = isize;
     int divider = cfg.getInt("fireball_lifetimeDivider");
@@ -52,7 +52,7 @@ class Fireball {
   }
 
   void killFireball() {
-    pos.x = width+200; // shove it offscreen so it doesn't affect the game
+    this.pos.x = width+200; // shove it offscreen so it doesn't affect the game
   }
 
   void flash() { // every x frames update the colour to the next in the list

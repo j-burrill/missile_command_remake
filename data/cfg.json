@@ -9,12 +9,12 @@
 	
 	"game_floorHeight": 20,
 	"game_colourFlashFrameDelay": 3,
-	"game_spawnEnemies": false,
+	"game_spawnEnemies": true,
 	"game_spawnPlanes": true,
 	"game_multiplayerDefault": false,
 	"game_saveHighScore": true,
 	
-	"cannon_cannonCount": 6,
+	"cannon_cannonCount": 3,
 	"cannon_mountain_levelH": 15,
 	"cannon_mountain_levels": 4,
 	"cannon_mountain_startW": 120,
@@ -46,8 +46,8 @@
 	"reticle_enableColourFlash": true,
 	"reticle_colourFlashFrameDelay": 3,
 	
-	"plane_enemyStartingSpawnDelay": 1,
-	"plane_moveSpeed": 5,
+	"plane_enemyStartingSpawnDelay": 10000,
+	"plane_moveSpeed": 3,
 	"plane_enemySpawnDelay": 8000,
 	"plane_spawnMissileCount": 5,
 	"plane_spaceBetweenMissile": 60,
@@ -57,7 +57,7 @@
 	"plane_collideLeniency": 10,
 	"plane_spawnEnemies": true,
 	"plane_fireBallSize": 150,
-	"plane_scoreForDestroying": 250,
+	"plane_scoreForDestroying": 600,
 	"plane_lossForEscaping": 150,
 
 }

@@ -47,10 +47,10 @@
 	"reticle_colourFlashFrameDelay": 3,
 	
 	"plane_enemyStartingSpawnDelay": 10000,
-	"plane_moveSpeed": 1,
+	"plane_moveSpeed": 2,
 	"plane_enemySpawnDelay": 8000,
 	"plane_spawnMissileCount": 5,
-	"plane_spaceBetweenMissile": 50,
+	"plane_spaceBetweenMissile": 60,
 	"plane_imgSize": 50,
 	"plane_forceSpawn": 0,
 	"plane_collideEnabled": true,

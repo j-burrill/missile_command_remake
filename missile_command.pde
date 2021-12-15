@@ -14,7 +14,7 @@ Justin Burrill
  
  
  make levels and proper system or make it harder as it goes on
-
+ 
  finish multiplayer
  */
 
@@ -51,6 +51,10 @@ int currentMenuUpdateDelay = menuUpdateDelay;
 int menuIndex = 0;
 String menuText2;
 
+boolean userIsTyping = false;
+String displayedUserText;
+String typedText="";
+String userInitials;
 
 
 void setup() {
@@ -101,6 +105,7 @@ void resetScreen() {
   tracers.clear();
   planes.clear();
   reticles.clear();
+  texts.clear();
 }
 
 void newMissile(Point start, Point finish, boolean player, Missile parent) {
@@ -180,7 +185,8 @@ color getColour(int index) {
 
 void startGame() {
   menuOpen = false; // close menu
-  actualScore = 0; displayScore = 0; // reset score
+  actualScore = 0;
+  displayScore = 0; // reset score
   int enemyStartingSpawnDelay = cfg.getInt("missile_enemyStartingSpawnDelay");
   int enemyPlaneStartingSpawnDelay = cfg.getInt("plane_enemyStartingSpawnDelay");
 
@@ -193,60 +199,16 @@ void startGame() {
   }
 }
 
-void keyPressed() {
-  if (menuOpen) {
-    if (key == ' ') { //spacebar
-      multiplayerEnabled = !multiplayerEnabled;
-    } else if (key == ENTER || key == RETURN) { //enter
-      startGame();
+
+
+
+
+
+void gameOver() {
+  menuOpen = true;
+  if ( actualScore > highscore ) { //update highscore if you beat it
+    if ( checkHighScore( actualScore ) ) {
+      userIsTyping = true;
     }
   }
-  if ( !multiplayerEnabled && !menuOpen ) { // check what cannon to fire
-    findKey(key);
-  }
-}
-
-void findKey(int key) {
-  if (cannon_debugEnabled) {
-    println(key);
-  }
-
-  int cannonPicked = 0;
-  // check what key is pressed (number keys or home row) and fire according cannon
-  // supports up to 10 cannons
-  if (key == 'a' || key == 49) {
-    cannonPicked = 0;
-  } else if (key == 's' || key == 50) {
-    cannonPicked = 1;
-  } else if (key == 'd' || key == 51) {
-    cannonPicked = 2;
-  } else if (key == 'f' || key == 52) {
-    cannonPicked = 3;
-  } else if (key == 'g' || key == 53) {
-    cannonPicked = 4;
-  } else if (key == 'h' || key == 54) {
-    cannonPicked = 5;
-  } else if (key == 'j' || key == 55) {
-    cannonPicked = 6;
-  } else if (key == 'k' || key == 56) {
-    cannonPicked = 7;
-  } else if (key == 'l' || key == 57) {
-    cannonPicked = 8;
-  } else if (key == ';' || key == 48) {
-    cannonPicked = 9;
-  } else cannonPicked = -1; // set it to something weird so it doesn't shoot
-
-  if (cannonPicked != -1 && cannonPicked <= cannons.size()) {
-    cannons.get(cannonPicked).fireCannon();
-  }
-}
-
-void addScore( int amount ) {
-  actualScore += amount;
-  newScoreText( amount );
-}
-
-void newScoreText( int amount ) {
-  Score_text t = new Score_text( amount );
-  texts.add(t);
 }

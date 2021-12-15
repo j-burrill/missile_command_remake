@@ -40,7 +40,8 @@ class Plane {
   void display() {
 
     if ( planeCollideEnabled ) {
-       for (Fireball f: fireballs) { // check collision with each fireball on the screen
+       for (int i=0; i<fireballs.size(); i++) { // check collision with each fireball on the screen
+        Fireball f = fireballs.get(i);
         checkCollision(f);
       }
     }

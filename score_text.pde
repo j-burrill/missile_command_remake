@@ -2,6 +2,17 @@
  This is for the green/red text that appears in the top left corner
  */
 
+
+void addScore( int amount ) {
+  actualScore += amount;
+  newScoreText( amount );
+}
+
+void newScoreText( int amount ) {
+  Score_text t = new Score_text( amount );
+  texts.add(t);
+}
+
 class Score_text {
   boolean text_debugEnabled = cfg.getBoolean("debug_text");
 

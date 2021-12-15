@@ -182,7 +182,9 @@ class Missile {
     //println("enemy missile has detonated, you lose");
     newFireball( int(missile_nose.x), int(missile_nose.y), 50 ); // draw fireball at the end of the line
     killMissile();
-    menuOpen = true;
+    if (!menuOpen) {
+      gameOver();
+    }
   }
 
   void checkCollision( Fireball f ) {
