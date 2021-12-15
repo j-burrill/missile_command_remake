@@ -34,16 +34,15 @@ class Reticle {
 
   void checkParent() {
     if ( parentMissile.missile_nose.x > width ) {
-      x=width+100;
+      this.x=width+100;
     }
   }
 
   void flash() { // every x frames update the colour to the next in the list
-    flashTimer--;
-    if ( flashTimer <= 0 ) {
+    if ( --flashTimer <= 0 ) {
       flashTimer = flashDelay;
 
-      tintC = getColour( currentColourIndex = nextIndex( currentColourIndex ) );
+      this.tintC = getColour( currentColourIndex = nextIndex( currentColourIndex ) );
     }
     if (reticle_debugEnabled) {
       println("reticle flashTimer: "+flashTimer);

@@ -29,6 +29,7 @@ class Plane {
     if (plane_debugEnabled) {
       println("plane created");
     }
+    
   }
 
   Plane() {
@@ -39,8 +40,7 @@ class Plane {
   void display() {
 
     if ( planeCollideEnabled ) {
-      for (int i = 0; i<fireballs.size(); i++) { // check collision with each fireball on the screen
-        Fireball f = fireballs.get(i);
+       for (Fireball f: fireballs) { // check collision with each fireball on the screen
         checkCollision(f);
       }
     }
