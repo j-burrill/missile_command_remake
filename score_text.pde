@@ -4,8 +4,10 @@
 
 
 void addScore( int amount ) {
-  actualScore += amount;
-  newScoreText( amount );
+  if (!menuOpen) {
+    actualScore += amount;
+    newScoreText( amount );
+  }
 }
 
 void newScoreText( int amount ) {

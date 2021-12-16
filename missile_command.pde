@@ -30,6 +30,7 @@ ArrayList<Score_text> texts = new ArrayList<Score_text>();
 
 // some settings are written in a json file, object is created here
 JSONObject cfg;
+boolean defaultcfg = true;
 // create certain variables that need to be accessed globally
 boolean game_debugEnabled;
 boolean multiplayerEnabled;
@@ -51,21 +52,18 @@ int currentMenuUpdateDelay = menuUpdateDelay;
 int menuIndex = 0;
 String menuText2;
 
-boolean userIsTyping = false;
-String displayedUserText;
-String typedText="";
-String userInitials;
+//boolean userIsTyping = false;
+//String typedText="";
+//String displayedUserText;
+//String userInitials;
 
 
 void setup() {
+  // clear cannons so that ... 
+  cannons.clear();
   // get settings from the json file
-  cfg = loadJSONObject("cfg.json");
-  floorHeight = cfg.getInt("game_floorHeight");
-  cannonCount = cfg.getInt("cannon_cannonCount");
-  game_debugEnabled = cfg.getBoolean("debug_game");
-  menuUpdateDelay = cfg.getInt("menu_textUpdateDelay");
-  cannon_debugEnabled = cfg.getBoolean("debug_cannon");
-  multiplayerEnabled = cfg.getBoolean("game_multiplayerDefault");
+  loadcfg();
+  
 
   backgroundColour = color(0); // (0)
   dirtColour = color(125, 83, 54); // (color(125, 83, 54)
@@ -79,11 +77,27 @@ void setup() {
     cannons.add(new Cannon(i));
   }
 
-  // gives warning if the amount of cannons is too much or too little and isn't won't work with the controls
+  // gives warning if the amount of cannons is too much or too little and won't work with the controls
   if (cannonCount > 10 || cannonCount < 1) {
     println("cannon count out of bounds");
   }
 }
+
+void loadcfg() {
+  if (defaultcfg) {
+    cfg = loadJSONObject("cfg_default.json");
+  } else {
+    cfg = loadJSONObject("cfg.json");
+  }
+  floorHeight = cfg.getInt("game_floorHeight");
+  cannonCount = cfg.getInt("cannon_cannonCount");
+  game_debugEnabled = cfg.getBoolean("debug_game");
+  menuUpdateDelay = cfg.getInt("menu_textUpdateDelay");
+  cannon_debugEnabled = cfg.getBoolean("debug_cannon");
+  multiplayerEnabled = cfg.getBoolean("game_multiplayerDefault");
+}
+
+
 
 String menuTxt2() {
   // this handles the fun little animation on the main menu
@@ -199,16 +213,11 @@ void startGame() {
   }
 }
 
-
-
-
-
-
 void gameOver() {
   menuOpen = true;
-  if ( actualScore > highscore ) { //update highscore if you beat it
+  if ( actualScore > highscore && defaultcfg ) { //update highscore if you beat it
     if ( checkHighScore( actualScore ) ) {
-      userIsTyping = true;
+      //userIsTyping = true;
     }
   }
 }

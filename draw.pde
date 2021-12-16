@@ -119,52 +119,54 @@ void drawMenu() {
   // draw all the text on my menu
   String scoretxt = "Score: " + actualScore;
   String hscoretxt = "Highscores:";
-  String tutorialtxt = "Use number keys or home row keys to fire your missiles";
-  String menutxt = "Press enter to start" + menuTxt2();
-  String multiplayerInstructiontxt = "Press space to toggle multiplayer";
-  String multiplayerEnabledtxt = "Multiplayer enabled: " + multiplayerEnabled;
+  String tutorialtxt = "Use number keys or home row keys to fire your missiles.";
+  String menutxt = "Press space to start" + menuTxt2();
+  String multiplayerEnabledtxt = "Multiplayer enabled (SHIFT): " + multiplayerEnabled;
+  String cfgtxt = "Custom config (TAB): " + !defaultcfg;
 
   int topTextHeight = 70;
 
-  text(scoretxt, centreText(scoretxt), topTextHeight);
-  text(tutorialtxt, centreText(tutorialtxt), topTextHeight + 30);
-  text(multiplayerInstructiontxt, centreText(multiplayerInstructiontxt), topTextHeight + 60);
-  text(menutxt, centreText(menutxt), topTextHeight + 90);
+  text(scoretxt, centreText(scoretxt), height-floorHeight-60);
+  text(tutorialtxt, centreText(tutorialtxt), topTextHeight + 60);
+  text(menutxt, centreText(menutxt), topTextHeight + 120);
 
 
   int[] scores = reverse(sort(int(loadStrings("data/highscores.txt"))));
 
   textSize(20);
-  text(hscoretxt, centreText(hscoretxt), topTextHeight + 140);
+  text(hscoretxt, centreText(hscoretxt), topTextHeight + 180);
   text(multiplayerEnabledtxt, 5, 22);
+  text(cfgtxt, 5, 52);
 
-  if (userIsTyping) {
-    textSize(35);
-    String ugotHscore = "You got a score in the top ten!\nEnter your initials to save it!";
-    text(ugotHscore, centreText(ugotHscore), 350);
-    text(typedText, centreText(typedText), 410);
-  } else {
-    for (int i=0; i<scores.length; i++) {
-      if (i==10) {
-        break;
-      }
-      color textColour = color(255);
+  //if (userIsTyping) {
+  //displayedUserText = typedText.toUpperCase();
+  //textSize(35);
+  //String ugotHscore = "You got a score in the top ten!\nEnter your initials to save it!";
+  //text(ugotHscore, centreText(ugotHscore), 350);
+  //text(displayedUserText, centreText(displayedUserText), 460);
+  //} else {
 
-      // top three scores get gold, silver, bronze
-      if (i==0) {
-        textColour = color(255, 223, 0);
-      } else if (i==1) {
-        textColour = color(196, 202, 206);
-      } else if (i==2) {
-        textColour = color(176, 141, 87);
-      }
-
-      fill(textColour);
-
-      text(scores[i], centreText(str(scores[i])), topTextHeight + 170 + (i*30));
+  for (int i=0; i<scores.length; i++) {
+    if (i==10) {
+      break;
     }
+    color textColour = color(255);
+
+    // top three scores get gold, silver, bronze
+    if (i==0) {
+      textColour = color(255, 223, 0);
+    } else if (i==1) {
+      textColour = color(196, 202, 206);
+    } else if (i==2) {
+      textColour = color(176, 141, 87);
+    }
+
+    fill(textColour);
+
+    text(scores[i], centreText(str(scores[i])), topTextHeight + 210 + (i*30));
   }
 }
+
 
 int centreText( String txt ) {
   //this centers the score to the middle of the screen constantly by getting its width
@@ -188,7 +190,8 @@ boolean checkHighScore(int newScore ) {
   if ( sortedArray.length < 10 || newScore > sortedArray[9] ) {
     writeHighScore( actualScore, intscores );
     return true;
-  } return false;
+  }
+  return false;
 }
 
 void writeHighScore( int newScore, int[] scoresArray ) {

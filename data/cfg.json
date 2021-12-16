@@ -22,8 +22,8 @@
 	
 	"missile_splitEnabled": false,
 	"missile_collideEnabled": true,
-	"missile_enemyStartingSpawnDelay": 2000,
-	"missile_enemySpawnDelay": 2000,
+	"missile_enemyStartingSpawnDelay": 100,
+	"missile_enemySpawnDelay": 10,
 	"missile_splitMissileCount": 2,
 	"missile_splitMissileChance": 1000,
 	"missile_splitMissileCutoff": 200,
@@ -42,13 +42,12 @@
 	"fireball_enableColourFlash": true,
 	"fireball_colourFlashFrameDelay": 3,
 	
-	
 	"reticle_enableColourFlash": true,
 	"reticle_colourFlashFrameDelay": 3,
 	
-	"plane_enemyStartingSpawnDelay": 10000,
-	"plane_moveSpeed": 3,
-	"plane_enemySpawnDelay": 8000,
+	"plane_enemyStartingSpawnDelay": 100,
+	"plane_enemySpawnDelay": 10,
+	"plane_moveSpeed": 2,
 	"plane_spawnMissileCount": 5,
 	"plane_spaceBetweenMissile": 60,
 	"plane_imgSize": 50,
@@ -56,8 +55,9 @@
 	"plane_collideEnabled": true,
 	"plane_collideLeniency": 10,
 	"plane_spawnEnemies": true,
-	"plane_fireBallSize": 150,
+	"plane_fireBallSize": 180,
 	"plane_scoreForDestroying": 600,
+	"plane_scoreForDestroyingAlreadyBombed": 100,
 	"plane_lossForEscaping": 150,
 
 }

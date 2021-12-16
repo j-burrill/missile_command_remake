@@ -29,7 +29,6 @@ class Plane {
     if (plane_debugEnabled) {
       println("plane created");
     }
-    
   }
 
   Plane() {
@@ -40,7 +39,7 @@ class Plane {
   void display() {
 
     if ( planeCollideEnabled ) {
-       for (int i=0; i<fireballs.size(); i++) { // check collision with each fireball on the screen
+      for (int i=0; i<fireballs.size(); i++) { // check collision with each fireball on the screen
         Fireball f = fireballs.get(i);
         checkCollision(f);
       }
@@ -136,8 +135,14 @@ class Plane {
     if ( isCollide( f ) ) { // if they collide, kill the missile and give score and stuff
       int fireballSize = cfg.getInt("plane_fireBallSize");
       int scoreForDestroying = cfg.getInt("plane_scoreForDestroying");
-      addScore(scoreForDestroying);
-
+      int scoreForDestroyingAlreadyBombed = cfg.getInt("plane_scoreForDestroyingAlreadyBombed");
+      
+      // get more score for destroying it before it drops its bombs
+      if (!bombed) {
+        addScore(scoreForDestroying);
+      } else {
+        addScore(scoreForDestroyingAlreadyBombed);
+      }
       newFireball( int(planePos.x), int(planePos.y), fireballSize ); // little fireball after you destroy a missile
 
       killPlane();
