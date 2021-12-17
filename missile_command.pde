@@ -51,6 +51,7 @@ int menuUpdateDelay;
 int currentMenuUpdateDelay = menuUpdateDelay;
 int menuIndex = 0;
 String menuText2;
+boolean topTenScore = false;
 
 //boolean userIsTyping = false;
 //String typedText="";
@@ -59,11 +60,11 @@ String menuText2;
 
 
 void setup() {
-  // clear cannons so that ... 
+  // clear cannons so that ...
   cannons.clear();
   // get settings from the json file
   loadcfg();
-  
+
 
   backgroundColour = color(0); // (0)
   dirtColour = color(125, 83, 54); // (color(125, 83, 54)
@@ -199,6 +200,7 @@ color getColour(int index) {
 
 void startGame() {
   menuOpen = false; // close menu
+  topTenScore = false;
   actualScore = 0;
   displayScore = 0; // reset score
   int enemyStartingSpawnDelay = cfg.getInt("missile_enemyStartingSpawnDelay");
@@ -215,9 +217,9 @@ void startGame() {
 
 void gameOver() {
   menuOpen = true;
-  if ( actualScore > highscore && defaultcfg ) { //update highscore if you beat it
-    if ( checkHighScore( actualScore ) ) {
-      //userIsTyping = true;
-    }
+  if ( defaultcfg && checkHighScore( actualScore ) ) {
+    topTenScore = true;
+
+    //userIsTyping = true;
   }
 }

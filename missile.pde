@@ -180,7 +180,8 @@ class Missile {
 
   void finishEnemyMissile() {
     //println("enemy missile has detonated, you lose");
-    newFireball( int(missile_nose.x), int(missile_nose.y), 50 ); // draw fireball at the end of the line
+    int enemyMissileFinishFireballSize = cfg.getInt("missile_enemy_fireBallSize");
+    newFireball( int(missile_nose.x), int(missile_nose.y), enemyMissileFinishFireballSize ); // draw fireball at the end of the line
     killMissile();
     if (!menuOpen) {
       gameOver();

@@ -123,8 +123,13 @@ void drawMenu() {
   String menutxt = "Press space to start" + menuTxt2();
   String multiplayerEnabledtxt = "Multiplayer enabled (SHIFT): " + multiplayerEnabled;
   String cfgtxt = "Custom config (TAB): " + !defaultcfg;
+  String topTenScoreText = "You got a score in the top ten!";
 
   int topTextHeight = 70;
+
+  if (topTenScore) {
+    text(topTenScoreText, centreText(topTenScoreText), height-floorHeight-90);
+  }
 
   text(scoretxt, centreText(scoretxt), height-floorHeight-60);
   text(tutorialtxt, centreText(tutorialtxt), topTextHeight + 60);
@@ -141,7 +146,7 @@ void drawMenu() {
   //if (userIsTyping) {
   //displayedUserText = typedText.toUpperCase();
   //textSize(35);
-  //String ugotHscore = "You got a score in the top ten!\nEnter your initials to save it!";
+
   //text(ugotHscore, centreText(ugotHscore), 350);
   //text(displayedUserText, centreText(displayedUserText), 460);
   //} else {

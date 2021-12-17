@@ -13,6 +13,7 @@ class Cannon {
   int yPos = height-(floorHeight + mountain_levelH * mountain_levels);
   int defaultAmmo = cfg.getInt("cannon_defaultAmmo");
   int ammo = defaultAmmo;
+  //int warningAmmo = defaultAmmo/4;
 
 
 

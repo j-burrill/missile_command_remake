@@ -134,16 +134,20 @@ class Plane {
     // check to see if enemy missile should be destroyed by my fireball
     if ( isCollide( f ) ) { // if they collide, kill the missile and give score and stuff
       int fireballSize = cfg.getInt("plane_fireBallSize");
+      int fireballSizeEmpty = cfg.getInt("plane_fireBallSizeEmpty");
       int scoreForDestroying = cfg.getInt("plane_scoreForDestroying");
-      int scoreForDestroyingAlreadyBombed = cfg.getInt("plane_scoreForDestroyingAlreadyBombed");
-      
+      int scoreForDestroyingEmpty = cfg.getInt("plane_scoreForDestroyingEmpty");
+
       // get more score for destroying it before it drops its bombs
+      // resulting fireball is also smaller
       if (!bombed) {
         addScore(scoreForDestroying);
+        // fireball that spawns after you blow up the plane
+        newFireball( int(planePos.x), int(planePos.y), fireballSize ); 
       } else {
-        addScore(scoreForDestroyingAlreadyBombed);
+        addScore(scoreForDestroyingEmpty);
+        newFireball( int(planePos.x), int(planePos.y), fireballSizeEmpty );
       }
-      newFireball( int(planePos.x), int(planePos.y), fireballSize ); // little fireball after you destroy a missile
 
       killPlane();
     }

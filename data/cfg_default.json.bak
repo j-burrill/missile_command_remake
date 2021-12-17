@@ -33,12 +33,13 @@
 	"missile_enemy_jump": 3,
 	"missile_enemy_delay": 16,
 	"missile_enemy_size": 10,
-	"missile_enemy_fireBallSize": 80,
+	"missile_enemy_fireBallSize": 55,
+	"missile_enemy_finishFireBallSize": 80,
 	"missile_enemy_scoreForDestroying": 100,
 	
 	"menu_textUpdateDelay": 40,
 	
-	"fireball_lifetimeDivider": 50,
+	"fireball_lifetimeDivider": 55,
 	"fireball_enableColourFlash": true,
 	"fireball_colourFlashFrameDelay": 3,
 	
@@ -46,8 +47,8 @@
 	"reticle_colourFlashFrameDelay": 3,
 	
 	"plane_enemyStartingSpawnDelay": 10000,
+	"plane_enemySpawnDelay": 8000,
 	"plane_moveSpeed": 2,
-	"plane_enemySpawnDelay": 10,
 	"plane_spawnMissileCount": 5,
 	"plane_spaceBetweenMissile": 60,
 	"plane_imgSize": 50,
@@ -55,9 +56,10 @@
 	"plane_collideEnabled": true,
 	"plane_collideLeniency": 10,
 	"plane_spawnEnemies": true,
-	"plane_fireBallSize": 180,
+	"plane_fireBallSize": 200,
+	"plane_fireBallSizeEmpty": 90,
 	"plane_scoreForDestroying": 600,
-	"plane_scoreForDestroyingAlreadyBombed": 100,
+	"plane_scoreForDestroyingEmpty": 100,
 	"plane_lossForEscaping": 150,
 
 }
