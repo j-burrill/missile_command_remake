@@ -16,6 +16,10 @@ Justin Burrill
  make levels and proper system or make it harder as it goes on
  
  finish multiplayer
+ 
+ 
+ ******* put the score and the player in one line, split them, make the highscores sorting algorithm manually, sort them together, put them back in together?
+         or read the line until the space and then sort it without splitting them?
  */
 
 // lists for each object that needs to be updated each frame
