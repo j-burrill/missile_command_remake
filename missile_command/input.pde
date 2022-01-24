@@ -11,9 +11,11 @@ void keyPressed() {
       startGame();
     }
   }
+  
   if ( !multiplayerEnabled && !menuOpen ) { // check what cannon to fire
     findKey(key);
   }
+  
   if (userTyping) {
     // code reused from my license plate generator
     int mainLength = typedText.length();

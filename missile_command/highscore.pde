@@ -10,28 +10,13 @@ class HighScores { //<>// //<>// //<>// //<>//
   HighScores() {
   }
 
-  //  read high scores from disk
-  //  write high scores to disk
-  //  get high scores
-  //  add high score
-  //  toString
-  //  high score count
-  //  reset scores
-
-  //  array of scores
-
-  int scoreCount() {
-    String[] savedScores = loadStrings("data/highscores.txt");
-    return savedScores.length;
-  }
-
   String[] readFile() {
     String[] savedScores = loadStrings("data/highscores.txt");
     return savedScores;
   }
 
   int getScore(int i) {
-    if (scoreCount() < podiumCount) {
+    if (readFile().length < podiumCount) {
       return pair.scores[pair.scores.length-1];
     }
     return pair.scores[i-podiumCount-1];
@@ -41,6 +26,7 @@ class HighScores { //<>// //<>// //<>// //<>//
     // if one element is bigger than the next, swap em
     // repeat until the whole thing is sorted
     // this algorithm is slow compared to others, but it was the easiest to come up with and write
+    // consider writing a new one?
     boolean stillSorting = true;
     while ( stillSorting ) {
       stillSorting = false;
@@ -133,7 +119,7 @@ class HighScores { //<>// //<>// //<>// //<>//
 
   boolean checkHighScore( int newScore ) {
     // checks if a score is in the top ten
-    if ( newScore > getScore(podiumCount) || scoreCount() < podiumCount ) {
+    if ( newScore > getScore(podiumCount) || readFile().length < podiumCount ) {
       return true;
     }
     return false;
