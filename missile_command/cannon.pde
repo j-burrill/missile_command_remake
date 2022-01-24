@@ -22,11 +22,11 @@ class Cannon {
     //xPos = 60 + ( ( num ) * 340 ); // defines where the missiles come from // old
   }
 
-  void fireCannon() { // draws path for the missile from specified cannon to mouse coordinates
+  void fireCannon( int x, int y ) { // draws path for the missile from specified cannon to mouse coordinates
     //println("fired cannon");
     if ( ammo > 0 && !menuOpen ) { // if your mouse is in the playing area, and you have ammo, and the game is running, fire missile
       Point start = new Point( xPos, yPos+mountain_levelH ); // need to subtract the height of one level because of the way i draw the mountain
-      Point finish = new Point( mouseX, mouseY );
+      Point finish = new Point( x, y );
       // spawn a new missile with the start at the cannon and the finish at the mouse
       newMissile( start, finish, true, null );
       ammo--; // lose one ammo for shooting

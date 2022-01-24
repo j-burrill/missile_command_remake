@@ -3,14 +3,12 @@ Justin Burrill
  Nov 02 2021
  Missile command for the Atari recreation
  
- TODO: 
+ TODO:
  *** fix missile split
  make the tracer stay after the line splits currently the splitpos follows the tail pos offscreen
  ^^ then make another constructor that allows missiles to have a plane as a parent, basically the same issue as the split missile
  
- make levels and proper system or make it harder as it goes on
- 
- finish multiplayer
+ make it harder as it goes on?
  */
 
 // lists for each object that needs to be updated each frame
@@ -21,17 +19,22 @@ ArrayList<Tracer> tracers = new ArrayList<Tracer>();
 ArrayList<Reticle> reticles = new ArrayList<Reticle>();
 ArrayList<Plane> planes = new ArrayList<Plane>();
 ArrayList<Score_text> texts = new ArrayList<Score_text>();
+ArrayList<Xhair> xhairs = new ArrayList<Xhair>();
+
+
+// create certain variables that need to be accessed globally
 
 
 // object that holds methods related to the highscore system, created so it can be accessed globally
 HighScores highScoresObj = new HighScores();
 
-
 // some settings are written in a json file, object is created here
 JSONObject cfg;
-boolean defaultcfg = true;
-// create certain variables that need to be accessed globally
-boolean multiplayerEnabled;
+int cfgIndex = 0;
+String[] cfgs = {"default", "custom", "multiplayer", "challenge"};
+
+Xhair redplayer;
+Xhair blueplayer;
 
 int floorHeight, cannonCount;
 int enemyMissileTimer = 0, enemyPlaneTimer = 0;
@@ -42,7 +45,6 @@ int displayScore = 0;
 color dirtColour, backgroundColour;
 color[] colourArray = new color[8];
 
-//int menuUpdateDelay = cfg.getInt("menu_textUpdateDelay");
 int menuUpdateDelay;
 int currentMenuUpdateDelay = menuUpdateDelay;
 int menuIndex = 0;
@@ -57,13 +59,10 @@ String userInitials;
 
 void setup() {
   highScoresObj.readAndSortScores();
-  
-  
-  // clear cannons so that ...
+
   cannons.clear();
   // get settings from the json file
   loadcfg();
-
 
   backgroundColour = color(0); // (0)
   dirtColour = color(125, 83, 54); // (color(125, 83, 54)
@@ -79,22 +78,26 @@ void setup() {
 
   // gives warning if the amount of cannons is too much or too little and won't work with the controls
   if (cannonCount > 10 || cannonCount < 1) {
-    println("cannon count out of bounds");
+    println("cannon count out of bounds!");
   }
 }
 
 void loadcfg() {
-  if (defaultcfg) {
-    cfg = loadJSONObject("cfg_default.json");
-  } else {
-    cfg = loadJSONObject("cfg.json");
+  if (cfgs[cfgIndex] == "default") {
+    cfg = loadJSONObject("cfg/cfg_default.json");
+  } else if (cfgs[cfgIndex] == "custom") {
+    cfg = loadJSONObject("cfg/cfg_custom.json");
+  } else if (cfgs[cfgIndex] == "multiplayer") {
+    setupMultiplayer();
+    cfg = loadJSONObject("cfg/cfg_multiplayer.json");
+  } else if (cfgs[cfgIndex] == "challenge") {
+    cfg = loadJSONObject("cfg/cfg_challenge.json");
   }
+
   floorHeight = cfg.getInt("game_floorHeight");
   cannonCount = cfg.getInt("cannon_cannonCount");
   menuUpdateDelay = cfg.getInt("menu_textUpdateDelay");
-  multiplayerEnabled = cfg.getBoolean("game_multiplayerDefault");
 }
-
 
 
 String menuTxt2() {
@@ -126,7 +129,7 @@ void newMissile(Point start, Point finish, boolean player, Missile parent) {
   spawnTracer(m, player); // new tracer with the missile as its parent
   if (player) {
     // only the player's missiles get reticles
-    newReticle(m);
+    newReticle(m, finish);
   }
 }
 
@@ -136,8 +139,8 @@ void spawnEnemyMissile(Point spawn, Point finish, Missile parent) {
   newMissile(spawn, finish, false, parent);
 }
 
-void newReticle(Missile m) {
-  Reticle r = new Reticle(mouseX, mouseY, m); // make a new reticle where the mouse is and tie it to the missile
+void newReticle(Missile m, Point pos) {
+  Reticle r = new Reticle(pos, m); // make a new reticle where the mouse is and tie it to the missile
   reticles.add(r); // add it to the array
 }
 
@@ -153,12 +156,6 @@ void spawnTracer(Missile m, boolean player) {
   tracers.add(t);
 }
 
-int getYpos() {
-  int top = 100;
-  int bottom = height - (floorHeight + 400);
-  return int(random(top, bottom));
-}
-
 void spawnPlane( Point startingPos, int bombX, boolean movingLeft ) {
   Plane p = new Plane( startingPos, bombX, movingLeft );
   planes.add(p);
@@ -172,7 +169,6 @@ void drawCentreLine() { // used for making sure my cannons are in the right spot
 }
 
 int nextIndex(int in) {
-  // this is for making the fireballs and reticles flash colours
   // return the next one in the array, jump back to the start if you're at the end
   int out = in != colourArray.length - 1 ? in + 1 : 0;
   return out;
@@ -210,10 +206,12 @@ void startGame() {
 }
 
 void gameOver() {
-  highScoresObj.readAndSortScores(); 
+  highScoresObj.readAndSortScores();
   menuOpen = true;
-  userTyping = true;
-  if ( defaultcfg && highScoresObj.checkHighScore( actualScore ) ) {
+  if ( cfgs[cfgIndex] == "default" ) {
+    userTyping = true;
+  }
+  if ( cfgs[cfgIndex] == "default" && highScoresObj.checkHighScore( actualScore ) ) {
     topTenScore = true;
   }
 }

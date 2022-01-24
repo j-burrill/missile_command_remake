@@ -9,8 +9,7 @@ void drawMenu() {
   String hscoretxt = "Highscores:";
   String tutorialtxt = "Use number keys or home row keys to fire your missiles.";
   String menutxt = "Press space to start" + menuTxt2();
-  String multiplayerEnabledtxt = "Multiplayer enabled (SHIFT): " + multiplayerEnabled;
-  String cfgtxt = "Custom config (TAB): " + !defaultcfg;
+  String cfgtxt = "Current config (TAB): " + cfgs[cfgIndex] + " ("+(cfgIndex+1)+"/"+cfgs.length+")";
   String topTenScoreText = "You got a score in the top ten!";
   String typePrompt = "Enter your name/initials:";
 
@@ -36,8 +35,7 @@ void drawMenu() {
     text(menutxt, centreText(menutxt), topTextHeight + 120);
     textSize(20);
     text(hscoretxt, centreText(hscoretxt), topTextHeight + 180);
-    text(multiplayerEnabledtxt, 5, 22);
-    text(cfgtxt, 5, 52);
+    text(cfgtxt, 5, 22);
 
     for (int i=0; i<scores.length; i++) {
       if (i==10) {

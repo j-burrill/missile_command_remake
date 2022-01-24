@@ -2,49 +2,114 @@
 
 void keyPressed() {
   if (menuOpen) {
-    if (key == SHIFT) { //shift for multiplayer
-      //multiplayerEnabled = !multiplayerEnabled;
-    } else if (key == TAB) {// control to switch default and custom cfg
-      //println("switching cfg");
+    if (key == TAB) {// control to switch default and custom cfg
       switchcfg();
     } else if (key == ' ' && !userTyping) { //spacebar to start
       startGame();
     }
   }
-  
-  if ( !multiplayerEnabled && !menuOpen ) { // check what cannon to fire
+
+  if ( cfgs[cfgIndex] != "multiplayer" && !menuOpen ) { // check what cannon to fire
     findKey(key);
   }
-  
-  if (userTyping) {
-    // code reused from my license plate generator
-    int mainLength = typedText.length();
-    if (key == BACKSPACE) {
-      if (mainLength > 0) {
-        String newText = typedText.substring(0, mainLength-1);// remove the last letter when backspace is pressed
-        typedText = newText;
-        mainLength--;
+
+  if (cfgs[cfgIndex] == "multiplayer" && !menuOpen) {
+    if (key == ' ') {
+      redplayer.fire();
+    }
+    if (keyCode == SHIFT) {
+      blueplayer.fire();
+    }
+    
+    if (key == 'a') {
+      redplayer.leftHeld = true;
+    }
+    if (key == 'd') {
+      redplayer.rightHeld = true;
+    }
+    if (key == 'w') {
+      redplayer.upHeld = true;
+    }
+    if (key == 's') {
+      redplayer.downHeld = true;
+    }
+
+    if (keyCode == LEFT) {
+      blueplayer.leftHeld = true;
+    }
+    if (keyCode == RIGHT) {
+      blueplayer.rightHeld = true;
+    }
+    if (keyCode == UP) {
+      blueplayer.upHeld = true;
+    }
+    if (keyCode == DOWN) {
+      blueplayer.downHeld = true;
+    }
+
+    if (userTyping) {
+      // code reused from my license plate generator
+      int mainLength = typedText.length();
+      if (key == BACKSPACE) {
+        if (mainLength > 0) {
+          String newText = typedText.substring(0, mainLength-1);// remove the last letter when backspace is pressed
+          typedText = newText;
+          mainLength--;
+        }
+      }
+      if (key != CODED && key != BACKSPACE && key != ENTER) {
+        typedText += key;
+      } // only print if it is a letter/num
+      if (key == ENTER) {
+        // submit when enter is pressed
+
+        highScoresObj.saveScore(typedText.toUpperCase());
+        userTyping = false;
       }
     }
-    if (key != CODED && key != BACKSPACE && key != ENTER) {
-      typedText += key;
-    } // only print if it is a letter/num
-    if (key == ENTER) {
-      // submit when enter is pressed
-      
-      highScoresObj.saveScore(typedText.toUpperCase());
-      userTyping = false;
+  }
+}
+
+void keyReleased() {
+  if (cfgs[cfgIndex] == "multiplayer" && !menuOpen) {
+    if (key == 'a') {
+      redplayer.leftHeld = false;
+    }
+    if (key == 'd') {
+      redplayer.rightHeld = false;
+    }
+    if (key == 'w') {
+      redplayer.upHeld = false;
+    }
+    if (key == 's') {
+      redplayer.downHeld = false;
+    }
+
+    if (keyCode == LEFT) {
+      blueplayer.leftHeld = false;
+    }
+    if (keyCode == RIGHT) {
+      blueplayer.rightHeld = false;
+    }
+    if (keyCode == UP) {
+      blueplayer.upHeld = false;
+    }
+    if (keyCode == DOWN) {
+      blueplayer.downHeld = false;
     }
   }
 }
 
 void switchcfg() {
-  defaultcfg = !defaultcfg;
+  if (cfgIndex+1 == cfgs.length) {
+    cfgIndex = 0;
+  } else {
+    cfgIndex++;
+  }
   setup();
 }
 
 void findKey(int key) {
-
   int cannonPicked = 0;
   // check what key is pressed (number keys or home row) and fire according cannon
   // supports up to 10 cannons
@@ -70,6 +135,12 @@ void findKey(int key) {
     cannonPicked = 9;
   } else cannonPicked = -1; // set it to something weird so it doesn't shoot
   if (cannonPicked != -1 && cannonPicked <= cannons.size()-1) {
-    cannons.get(cannonPicked).fireCannon();
+    cannons.get(cannonPicked).fireCannon(mouseX, mouseY);
   }
+}
+
+int getYpos() {
+  int top = 100;
+  int bottom = height - (floorHeight + 400);
+  return int(random(top, bottom));
 }

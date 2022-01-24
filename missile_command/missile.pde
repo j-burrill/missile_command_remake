@@ -142,7 +142,6 @@ class Missile {
     if ( isOnScreen() ) {
       killPos = missile_nose;
     }
-
   }
 
   void checkDestination() {

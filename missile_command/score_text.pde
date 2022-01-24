@@ -46,7 +46,6 @@ class Score_text {
     update();
     fill(textColour);
     text(nfp(num, 0), textPos.x, textPos.y);
-
   }
 
   void update() {
@@ -57,7 +56,6 @@ class Score_text {
     if ( checkDestination() ) {
       killText();
       displayScore += num;
-
     }
   }
 

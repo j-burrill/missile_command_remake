@@ -34,6 +34,5 @@ class Tracer {
     // get start and end from the missile
     start = missile.path_start;
     end = missile.missile_tail;
-
   }
 }

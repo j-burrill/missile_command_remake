@@ -1,7 +1,7 @@
-class HighScores { //<>//
+class HighScores { //<>// //<>//
   // object that holds methods related to the highscore system
 
-  final int podiumCount = 10;
+  final int PODIUMCOUNT = 10;
 
   NamesAndScoresPair pair;
   String[] lines;
@@ -11,12 +11,12 @@ class HighScores { //<>//
   }
 
   String[] readFile() {
-    String[] savedScores = loadStrings("data/highscores.txt");
+    String[] savedScores = loadStrings("data/txt/highscores.txt");
     return savedScores;
   }
 
   int getScore(int i) {
-    if (readFile().length < podiumCount) {
+    if (readFile().length < PODIUMCOUNT) {
       return pair.scores[pair.scores.length-1];
     }
     return pair.scores[i-1];
@@ -60,7 +60,7 @@ class HighScores { //<>//
       //println("str:", str);
     }
 
-    output = createWriter("data/highscores.txt");
+    output = createWriter("data/txt/highscores.txt");
 
     // write each line in my array to the file
     for (int i = 0; i<lines.length; i++) {
@@ -98,7 +98,7 @@ class HighScores { //<>//
        mno 1250
        */
       String[] lineInfo = split(scoreRow, ' ');
-      // make a new HighScore object with the 
+      // make a new HighScore object with the
       HighScore currentLine = new HighScore( int(lineInfo[1]), lineInfo[0] );
       lines[i] = currentLine;
     }
@@ -112,14 +112,14 @@ class HighScores { //<>//
     pair.scores = append(pair.scores, actualScore);
     pair.names = append(pair.names, userInitials);
     // save the scores to the file
-    write(pair); //<>//
+    write(pair);
     // sort and update my lists
     readAndSortScores();
   }
 
   boolean checkHighScore( int newScore ) {
     // checks if a score is in the top ten
-    if ( newScore > getScore(podiumCount) || readFile().length < podiumCount ) {
+    if ( newScore > getScore(PODIUMCOUNT) || readFile().length < PODIUMCOUNT ) {
       return true;
     }
     return false;

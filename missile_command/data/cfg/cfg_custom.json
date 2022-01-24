@@ -1,20 +1,12 @@
 {
-	"debug_game": false,
-	"debug_reticle": false,
-	"debug_missile": false,
-	"debug_cannon": false,
-	"debug_tracer": false,
-	"debug_plane": false,
-	"debug_text": false,
-	
-	"game_floorHeight": 20,
+
+	"game_floorHeight": 100,
 	"game_colourFlashFrameDelay": 3,
 	"game_spawnEnemies": true,
 	"game_spawnPlanes": true,
-	"game_multiplayerDefault": false,
 	"game_saveHighScore": true,
 	
-	"cannon_cannonCount": 3,
+	"cannon_cannonCount": 5,
 	"cannon_mountain_levelH": 15,
 	"cannon_mountain_levels": 4,
 	"cannon_mountain_startW": 120,

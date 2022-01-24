@@ -4,7 +4,7 @@
 
 class Reticle {
   PImage crossImg = loadImage("crosshair.png");
-  int x, y;
+  Point pos;
   int imgSize = 15;
   Missile parentMissile;
 
@@ -15,9 +15,8 @@ class Reticle {
   boolean enableColourFlash = cfg.getBoolean("reticle_enableColourFlash");
 
 
-  Reticle( int ix, int iy, Missile parent ) {
-    x=ix;
-    y=iy;
+  Reticle( Point p, Missile parent ) {
+    pos = p;
     parentMissile = parent;
   }
 
@@ -28,12 +27,12 @@ class Reticle {
     checkParent();
     // the base image is white and i use tint() to control its colour
     tint(tintC);
-    image( crossImg, x-imgSize/2, y-imgSize/2, imgSize, imgSize ); // the reticle is actually an image drawn here
+    image( crossImg, pos.x-imgSize/2, pos.y-imgSize/2, imgSize, imgSize ); // the reticle is actually an image drawn here
   }
 
   void checkParent() {
     if ( parentMissile.missile_nose.x > width ) {
-      this.x=width+100;
+      pos.x=width+100;
     }
   }
 

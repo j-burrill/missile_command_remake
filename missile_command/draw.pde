@@ -1,14 +1,12 @@
 void draw() {
+  
   background( backgroundColour );
   stroke(125, 83, 54);
   strokeWeight(0);
   fill(dirtColour);
 
-  displayScreen();
-
-
   rect(0, height-floorHeight, width, floorHeight); // rectangle for the ground
-
+  displayScreen();
   // only spawn enemies if it is enabled in the json
   boolean spawnEnemiesEnabled = cfg.getBoolean("game_spawnEnemies");
   boolean spawnPlanesEnabled = cfg.getBoolean("game_spawnPlanes");
@@ -96,6 +94,11 @@ void displayScreen() {
   for (Score_text t : texts) { // display all my tracers each frame
     if (t.isOnScreen()) {
       t.display();
+    }
+  }
+  if (cfgs[cfgIndex] == "multiplayer") {
+    for (Xhair x : xhairs) {
+      x.display();
     }
   }
 }
