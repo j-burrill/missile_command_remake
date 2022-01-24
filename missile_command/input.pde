@@ -7,38 +7,38 @@ void keyPressed() {
     } else if (key == TAB) {// control to switch default and custom cfg
       //println("switching cfg");
       switchcfg();
-    } else if (key == ' ') { //spacebar to start
-    startGame();
+    } else if (key == ' ' && !userTyping) { //spacebar to start
+      startGame();
+    }
   }
-}
-if ( !multiplayerEnabled && !menuOpen ) { // check what cannon to fire
-  findKey(key);
-}
-//if (userIsTyping) {
-//  // code reused from my license plate generator
-//  int mainLength = typedText.length();
-//  if (key == BACKSPACE) {
-//    if (mainLength > 0) {
-//      String newText = typedText.substring(0, mainLength-1);// remove the last letter when backspace is pressed
-//      typedText = newText;
-//      mainLength--;
-//    }
-//  }
-//  if (key != CODED && key != BACKSPACE && key != ENTER) {
-//    typedText += key;
-//  } // only print if it is a letter/num
-//  if (key == ENTER) {
-//    // submit when enter is pressed
-//    userInitials = typedText;
-//    userIsTyping = false;
-//  }
-//}
+  if ( !multiplayerEnabled && !menuOpen ) { // check what cannon to fire
+    findKey(key);
+  }
+  if (userTyping) {
+    // code reused from my license plate generator
+    int mainLength = typedText.length();
+    if (key == BACKSPACE) {
+      if (mainLength > 0) {
+        String newText = typedText.substring(0, mainLength-1);// remove the last letter when backspace is pressed
+        typedText = newText;
+        mainLength--;
+      }
+    }
+    if (key != CODED && key != BACKSPACE && key != ENTER) {
+      typedText += key;
+    } // only print if it is a letter/num
+    if (key == ENTER) {
+      // submit when enter is pressed
+      
+      highScoresObj.saveScore(typedText.toUpperCase());
+      userTyping = false;
+    }
+  }
 }
 
 void switchcfg() {
   defaultcfg = !defaultcfg;
   setup();
-  
 }
 
 void findKey(int key) {
@@ -51,7 +51,6 @@ void findKey(int key) {
   // supports up to 10 cannons
   if (key == 'a' || key == 49) {
     cannonPicked = 0;
-    
   } else if (key == 's' || key == 50) {
     cannonPicked = 1;
   } else if (key == 'd' || key == 51) {

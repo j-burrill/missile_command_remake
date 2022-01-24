@@ -3,23 +3,14 @@ Justin Burrill
  Nov 02 2021
  Missile command for the Atari recreation
  
- to do:
- 
- make high score save to a txt file with 3 letter initials or something
- 
+ TODO: 
  *** fix missile split
  make the tracer stay after the line splits currently the splitpos follows the tail pos offscreen
  ^^ then make another constructor that allows missiles to have a plane as a parent, basically the same issue as the split missile
  
- 
- 
  make levels and proper system or make it harder as it goes on
  
  finish multiplayer
- 
- 
- ******* put the score and the player in one line, split them, make the highscores sorting algorithm manually, sort them together, put them back in together?
-         or read the line until the space and then sort it without splitting them?
  */
 
 // lists for each object that needs to be updated each frame
@@ -30,6 +21,10 @@ ArrayList<Tracer> tracers = new ArrayList<Tracer>();
 ArrayList<Reticle> reticles = new ArrayList<Reticle>();
 ArrayList<Plane> planes = new ArrayList<Plane>();
 ArrayList<Score_text> texts = new ArrayList<Score_text>();
+
+
+// object that holds methods related to the highscore system, created so it can be accessed globally
+HighScores highScoresObj = new HighScores();
 
 
 // some settings are written in a json file, object is created here
@@ -57,13 +52,16 @@ int menuIndex = 0;
 String menuText2;
 boolean topTenScore = false;
 
-//boolean userIsTyping = false;
-//String typedText="";
-//String displayedUserText;
-//String userInitials;
+boolean userTyping = false;
+String typedText="";
+String displayedUserText;
+String userInitials;
 
 
 void setup() {
+  highScoresObj.readAndSortScores();
+  
+  
   // clear cannons so that ...
   cannons.clear();
   // get settings from the json file
@@ -220,10 +218,10 @@ void startGame() {
 }
 
 void gameOver() {
+  highScoresObj.readAndSortScores(); 
   menuOpen = true;
-  if ( defaultcfg && checkHighScore( actualScore ) ) {
+  userTyping = true;
+  if ( defaultcfg && highScoresObj.checkHighScore( actualScore ) ) {
     topTenScore = true;
-
-    //userIsTyping = true;
   }
 }

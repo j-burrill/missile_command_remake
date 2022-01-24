@@ -13,22 +13,17 @@ void draw() {
   for ( Tracer t : tracers ) { // display all my tracers each frame
     t.display();
   }
-
   for (Cannon c : cannons) { // display all my cannons each frame
-
     c.display();
   }
-
   for (Plane p : planes) { // display all my planes each frame
     if (p.isOnScreen()) {
       p.display();
     }
   }
-
   for (Fireball f : fireballs) { // display all my fireballs each frame
     f.display();
   }
-
   for (Missile m : missiles) { // do the following for each missile
     if ( m.isOnScreen() ) { // don't draw if it's outside of the screen, this is important because i kill the missiles by putting them outside
       m.checkUpdateTimer(); // move missile when its timer runs out
@@ -36,14 +31,12 @@ void draw() {
     }
     //println("drawing line: starting x: " + a.startX + " starting y: "+ a.startY + " ending x: " + a.endX + " ending y: "+ a.endY);
   }
-
   for (Reticle r : reticles) { // display all my reticles each frame
     //if (game_debugEnabled) {
     //  println("reticles.size(): "+reticles.size());
     //}
     r.display();
   }
-
   for (Score_text t : texts) { // display all my tracers each frame
     if (t.isOnScreen()) {
       t.display();
@@ -53,8 +46,6 @@ void draw() {
   // only spawn enemies if it is enabled in the json
   boolean spawnEnemiesEnabled = cfg.getBoolean("game_spawnEnemies");
   boolean spawnPlanesEnabled = cfg.getBoolean("game_spawnPlanes");
-
-  //println( "enemyPlaneTimer:", enemyPlaneTimer, " millis():", millis() );
 
   if ( spawnEnemiesEnabled && millis() > enemyMissileTimer && !menuOpen ) { // spawn enemies every x milliseconds if menu is closed
     //println("enemytimer ran out");
@@ -70,7 +61,6 @@ void draw() {
   }
 
   if ( spawnPlanesEnabled && millis() > enemyPlaneTimer && !menuOpen ) {
-
     int planeSize = cfg.getInt("plane_imgSize");
     int forceSpawn = cfg.getInt("plane_forceSpawn");
     boolean rightSideSpawn = false;
@@ -101,7 +91,7 @@ void draw() {
 
   if ( menuOpen ) {
     drawMenu();
-  } else if (!menuOpen) {
+  } else {
     textSize(25);
     fill(255);
     String scoretxt = "Score: " + displayScore;
@@ -110,13 +100,15 @@ void draw() {
   }
 }
 
+
+
 void drawMenu() {
+  String[] scores = highScoresObj.arrayPairToStr();
 
   fill(255);
   textSize(30);
 
-
-  // draw all the text on my menu
+  // all the text on my menu
   String scoretxt = "Score: " + actualScore;
   String hscoretxt = "Highscores:";
   String tutorialtxt = "Use number keys or home row keys to fire your missiles.";
@@ -124,96 +116,57 @@ void drawMenu() {
   String multiplayerEnabledtxt = "Multiplayer enabled (SHIFT): " + multiplayerEnabled;
   String cfgtxt = "Custom config (TAB): " + !defaultcfg;
   String topTenScoreText = "You got a score in the top ten!";
+  String typePrompt = "Enter your name:";
 
   int topTextHeight = 70;
 
-  if (topTenScore) {
-    text(topTenScoreText, centreText(topTenScoreText), height-floorHeight-90);
-  }
-
-  text(scoretxt, centreText(scoretxt), height-floorHeight-60);
-  text(tutorialtxt, centreText(tutorialtxt), topTextHeight + 60);
-  text(menutxt, centreText(menutxt), topTextHeight + 120);
 
 
-  int[] scores = reverse(sort(int(loadStrings("data/highscores.txt"))));
+  // hide the menu stuff when the user is typing
+  if (userTyping) {
+    displayedUserText = typedText.toUpperCase();
+    textSize(35);
+    text(displayedUserText, centreText(displayedUserText), 460);
+    text(typePrompt, centreText(typePrompt), 420);
+  } else {
 
-  textSize(20);
-  text(hscoretxt, centreText(hscoretxt), topTextHeight + 180);
-  text(multiplayerEnabledtxt, 5, 22);
-  text(cfgtxt, 5, 52);
-
-  //if (userIsTyping) {
-  //displayedUserText = typedText.toUpperCase();
-  //textSize(35);
-
-  //text(ugotHscore, centreText(ugotHscore), 350);
-  //text(displayedUserText, centreText(displayedUserText), 460);
-  //} else {
-
-  for (int i=0; i<scores.length; i++) {
-    if (i==10) {
-      break;
-    }
-    color textColour = color(255);
-
-    // top three scores get gold, silver, bronze
-    if (i==0) {
-      textColour = color(255, 223, 0);
-    } else if (i==1) {
-      textColour = color(196, 202, 206);
-    } else if (i==2) {
-      textColour = color(176, 141, 87);
+    if (topTenScore) {
+      text(topTenScoreText, centreText(topTenScoreText), height-floorHeight-90);
     }
 
-    fill(textColour);
 
-    text(scores[i], centreText(str(scores[i])), topTextHeight + 210 + (i*30));
+    text(scoretxt, centreText(scoretxt), height-floorHeight-60);
+    text(tutorialtxt, centreText(tutorialtxt), topTextHeight + 60);
+    text(menutxt, centreText(menutxt), topTextHeight + 120);
+    textSize(20);
+    text(hscoretxt, centreText(hscoretxt), topTextHeight + 180);
+    text(multiplayerEnabledtxt, 5, 22);
+    text(cfgtxt, 5, 52);
+
+    for (int i=0; i<scores.length; i++) {
+      if (i==10) {
+        break;
+      }
+      color textColour = color(255);
+
+      // top three scores get gold, silver, bronze
+      if (i==0) {
+        textColour = color(255, 223, 0);
+      } else if (i==1) {
+        textColour = color(196, 202, 206);
+      } else if (i==2) {
+        textColour = color(176, 141, 87);
+      }
+
+      fill(textColour);
+
+      text(scores[i], centreText(scores[i]), topTextHeight + 210 + (i*30));
+    }
   }
 }
 
 
 int centreText( String txt ) {
-  //this centers the score to the middle of the screen constantly by getting its width
-
+  // this centers the score to the middle of the screen constantly by getting its width
   return int(width/2-textWidth(txt)/2);
-}
-
-boolean checkHighScore(int newScore ) {
-
-  // array of all my high scores already in the file
-  String[] scores = loadStrings("data/highscores.txt");
-
-  // convert into ints
-  int[] intscores = int(scores);
-
-  // sort my list of highscores by value
-  int[] sortedArray = reverse(sort(intscores));
-
-
-  // if it is in the top ten scores, then add it to the file
-  if ( sortedArray.length < 10 || newScore > sortedArray[9] ) {
-    writeHighScore( actualScore, intscores );
-    return true;
-  }
-  return false;
-}
-
-void writeHighScore( int newScore, int[] scoresArray ) {
-  // new printwriter object
-  PrintWriter output;
-  output = createWriter("data/highscores.txt");
-
-  // add new highscore to the array
-  output.println(newScore);
-  append(scoresArray, newScore);
-
-
-  // write each line in the file back into it, because it gets cleared with createWriter
-  for (int i = 0; i<scoresArray.length; i++) {
-    output.println(scoresArray[i]);
-  }
-
-  output.flush(); // Writes the remaining data to the file
-  output.close(); // Finishes the file
 }
