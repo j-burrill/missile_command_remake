@@ -16,7 +16,6 @@ void newScoreText( int amount ) {
 }
 
 class Score_text {
-  boolean text_debugEnabled = cfg.getBoolean("debug_text");
 
 
   int num; // the change in score
@@ -32,9 +31,6 @@ class Score_text {
 
 
   Score_text( int amt ) {
-    if (text_debugEnabled) {
-      println("new score made");
-    }
     num = amt;
     // set move timer to a point in the future ahead of millis()
     moveTimer = millis() + moveDelay;
@@ -51,28 +47,17 @@ class Score_text {
     fill(textColour);
     text(nfp(num, 0), textPos.x, textPos.y);
 
-    if (text_debugEnabled) {
-      println("displayScore:", displayScore, " actualScore:", actualScore);
-    }
   }
 
   void update() {
-    if (text_debugEnabled) {
-      println("text x:", textPos.x, " y:", textPos.y);
-    }
     if ( checkTimer() ) {
-      if (text_debugEnabled) {
-        println("adjusting pos of text");
-      }
+
       textPos.y -= yMoveAmount;
     }
     if ( checkDestination() ) {
       killText();
       displayScore += num;
 
-      if (text_debugEnabled) {
-        println("text reached destination");
-      }
     }
   }
 
@@ -85,10 +70,6 @@ class Score_text {
 
   boolean checkDestination() {
     int dist = 5; // pixels away from the text level that it disappears from
-    if (text_debugEnabled) {
-
-      println("textPos.y", textPos.y, " targetY", targetY);
-    }
     if ( textPos.y-dist <= targetY ) {
       return true;
     } else return false;

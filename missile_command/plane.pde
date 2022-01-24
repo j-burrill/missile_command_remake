@@ -11,7 +11,6 @@ class Plane {
   int imgSize = cfg.getInt("plane_imgSize");
   color planeC = color(255, 0, 0);
   boolean rightSideSpawn;
-  boolean plane_debugEnabled = cfg.getBoolean("debug_plane");
   boolean planeCollideEnabled = cfg.getBoolean("plane_collideEnabled");
   boolean bombed = false;
   boolean bombEnabled = cfg.getBoolean("plane_spawnEnemies");
@@ -24,10 +23,6 @@ class Plane {
     if (Rspawn) {
       // set the speed to move the other way
       planeSpeed = planeSpeed*-1;
-    }
-
-    if (plane_debugEnabled) {
-      println("plane created");
     }
   }
 
@@ -46,9 +41,6 @@ class Plane {
     }
 
     update();
-    if (plane_debugEnabled) {
-      //println("plane pos:", planePos.x, planePos.y);
-    }
 
     tint(planeC);
     if (rightSideSpawn) {
@@ -68,9 +60,6 @@ class Plane {
     planePos.x += planeSpeed;
     if ( bombEnabled && checkDestination() && !bombed ) { // if bombing is enabled, it is past its destination, and it hasn't already bombed
       bomb();
-    }
-    if (plane_debugEnabled) {
-      //println("planePos.x:", planePos.x, "planeSpeed", planeSpeed);
     }
   }
 
@@ -105,14 +94,8 @@ class Plane {
   boolean isOnScreen() { // check if the plane is on the screen
     // it spawns offscreen so i need to check where it starts
     if (planePos.x < width+2 && !rightSideSpawn || planePos.x > -2 && rightSideSpawn && planePos.y > 0) {
-      if (plane_debugEnabled) {
-        //println("plane onscreen");
-      }
       return true;
     } else {
-      if (plane_debugEnabled) {
-        //println("plane offscreen");
-      }
       if (planePos.y>0) { // so it only adds score once when it goes offscreen
         killPlane();
         // lose score if you let a plane escape w/out destroying it
@@ -143,7 +126,7 @@ class Plane {
       if (!bombed) {
         addScore(scoreForDestroying);
         // fireball that spawns after you blow up the plane
-        newFireball( int(planePos.x), int(planePos.y), fireballSize ); 
+        newFireball( int(planePos.x), int(planePos.y), fireballSize );
       } else {
         addScore(scoreForDestroyingEmpty);
         newFireball( int(planePos.x), int(planePos.y), fireballSizeEmpty );

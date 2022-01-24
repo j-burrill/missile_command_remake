@@ -1,11 +1,4 @@
 {
-	"debug_game": false,
-	"debug_reticle": false,
-	"debug_missile": false,
-	"debug_cannon": false,
-	"debug_tracer": false,
-	"debug_plane": false,
-	"debug_text": false,
 	
 	"game_floorHeight": 20,
 	"game_colourFlashFrameDelay": 3,

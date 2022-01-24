@@ -1,4 +1,4 @@
-class HighScores { //<>// //<>// //<>// //<>//
+class HighScores { //<>//
   // object that holds methods related to the highscore system
 
   final int podiumCount = 10;
@@ -19,7 +19,7 @@ class HighScores { //<>// //<>// //<>// //<>//
     if (readFile().length < podiumCount) {
       return pair.scores[pair.scores.length-1];
     }
-    return pair.scores[i-podiumCount-1];
+    return pair.scores[i-1];
   }
 
   NamesAndScoresPair sortScores( HighScore[] lines ) {

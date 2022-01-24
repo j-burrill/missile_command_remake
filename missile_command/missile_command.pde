@@ -31,7 +31,6 @@ HighScores highScoresObj = new HighScores();
 JSONObject cfg;
 boolean defaultcfg = true;
 // create certain variables that need to be accessed globally
-boolean game_debugEnabled;
 boolean multiplayerEnabled;
 
 int floorHeight, cannonCount;
@@ -42,8 +41,6 @@ int displayScore = 0;
 
 color dirtColour, backgroundColour;
 color[] colourArray = new color[8];
-
-boolean cannon_debugEnabled;
 
 //int menuUpdateDelay = cfg.getInt("menu_textUpdateDelay");
 int menuUpdateDelay;
@@ -94,9 +91,7 @@ void loadcfg() {
   }
   floorHeight = cfg.getInt("game_floorHeight");
   cannonCount = cfg.getInt("cannon_cannonCount");
-  game_debugEnabled = cfg.getBoolean("debug_game");
   menuUpdateDelay = cfg.getInt("menu_textUpdateDelay");
-  cannon_debugEnabled = cfg.getBoolean("debug_cannon");
   multiplayerEnabled = cfg.getBoolean("game_multiplayerDefault");
 }
 
@@ -142,9 +137,6 @@ void spawnEnemyMissile(Point spawn, Point finish, Missile parent) {
 }
 
 void newReticle(Missile m) {
-  // if (game_debugEnabled) {
-  //println("new reticle created");
-  //}
   Reticle r = new Reticle(mouseX, mouseY, m); // make a new reticle where the mouse is and tie it to the missile
   reticles.add(r); // add it to the array
 }

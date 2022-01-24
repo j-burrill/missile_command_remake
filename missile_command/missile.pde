@@ -21,16 +21,12 @@ class Missile {
   int splitTimer;
 
   boolean playerMissile;
-  boolean missile_debugEnabled = cfg.getBoolean("debug_missile");
 
 
 
   Missile( Point ipath_start, Point ipath_finish, boolean pMissile, Missile parent ) {
     path_start = ipath_start;
     path_finish = ipath_finish;
-    if (missile_debugEnabled) {
-      println("path_start.x updated");
-    }
     missile_tail = new Point( path_start.x, path_start.y );
     missile_nose = new Point( path_start.x, path_start.y ); // this avoids NPE
     playerMissile = pMissile;
@@ -86,10 +82,6 @@ class Missile {
 
       int chance = cfg.getInt("missile_splitMissileChance"); // get chance to split from cfg
       int result = int(random(-10, chance)); // random chance to split the missile
-
-      //if (missile_debugEnabled) {
-      //println(result);
-      //}
 
       if (result < 0) {
         result=1;
@@ -149,13 +141,8 @@ class Missile {
 
     if ( isOnScreen() ) {
       killPos = missile_nose;
-      if ( missile_debugEnabled ) {
-        println("updating killPos.x to: " + killPos.x);
-      }
     }
-    if ( parentMissile != null && missile_debugEnabled ) {
-      println("missile startx, starty: ", path_start.x, path_start.y);
-    }
+
   }
 
   void checkDestination() {

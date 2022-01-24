@@ -9,8 +9,6 @@ class Tracer {
   boolean playerTracer;
   color tracerColour = color( 161, 20, 10 ); // red for enemy
 
-  boolean tracer_debugEnabled = cfg.getBoolean("debug_tracer");
-
 
   Tracer( Missile im, boolean iplayer ) {
     missile = im;
@@ -36,8 +34,6 @@ class Tracer {
     // get start and end from the missile
     start = missile.path_start;
     end = missile.missile_tail;
-    if ( tracer_debugEnabled ) {
-      println("tracer end.x: " + end.x);
-    }
+
   }
 }

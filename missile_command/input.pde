@@ -44,9 +44,6 @@ void switchcfg() {
 }
 
 void findKey(int key) {
-  if (cannon_debugEnabled) {
-    println(key);
-  }
 
   int cannonPicked = 0;
   // check what key is pressed (number keys or home row) and fire according cannon
