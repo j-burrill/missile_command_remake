@@ -1,16 +1,15 @@
 {
 
-	"game_floorHeight": 20,
+	"game_floorHeight": 150,
 	"game_colourFlashFrameDelay": 3,
 	"game_spawnEnemies": true,
 	"game_spawnPlanes": true,
-	"game_saveHighScore": true,
 	
-	"cannon_cannonCount": 3,
+	"cannon_cannonCount": 1,
 	"cannon_mountain_levelH": 15,
-	"cannon_mountain_levels": 4,
-	"cannon_mountain_startW": 120,
-	"cannon_defaultAmmo": 50,
+	"cannon_mountain_levels": 6,
+	"cannon_mountain_startW": 220,
+	"cannon_defaultAmmo": 99,
 	
 	"missile_splitEnabled": false,
 	"missile_collideEnabled": true,
@@ -28,6 +27,7 @@
 	"missile_enemy_fireBallSize": 80,
 	"missile_enemy_finishFireBallSize": 55,
 	"missile_enemy_scoreForDestroying": 100,
+	"missile_enemy_difficulty_scale": 0,
 	
 	"menu_textUpdateDelay": 40,
 	
@@ -53,5 +53,6 @@
 	"plane_scoreForDestroying": 600,
 	"plane_scoreForDestroyingEmpty": 100,
 	"plane_lossForEscaping": 150,
-
+	"plane_difficulty_scale": 0,
+	
 }

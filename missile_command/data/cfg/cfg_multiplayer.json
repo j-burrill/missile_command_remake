@@ -4,7 +4,6 @@
 	"game_colourFlashFrameDelay": 3,
 	"game_spawnEnemies": true,
 	"game_spawnPlanes": true,
-	"game_saveHighScore": true,
 	
 	"cannon_cannonCount": 2,
 	"cannon_mountain_levelH": 15,

@@ -14,13 +14,13 @@ void keyPressed() {
   }
 
   if (cfgs[cfgIndex] == "multiplayer" && !menuOpen) {
-    if (key == ' ') {
+    if (keyCode == SHIFT) {
       redplayer.fire();
     }
-    if (keyCode == SHIFT) {
+    if (keyCode == CONTROL) {
       blueplayer.fire();
     }
-    
+
     if (key == 'a') {
       redplayer.leftHeld = true;
     }
@@ -46,29 +46,30 @@ void keyPressed() {
     if (keyCode == DOWN) {
       blueplayer.downHeld = true;
     }
-
-    if (userTyping) {
-      // code reused from my license plate generator
-      int mainLength = typedText.length();
-      if (key == BACKSPACE) {
-        if (mainLength > 0) {
-          String newText = typedText.substring(0, mainLength-1);// remove the last letter when backspace is pressed
-          typedText = newText;
-          mainLength--;
-        }
+  }
+  if (userTyping) {
+    // code reused from my license plate generator
+    int mainLength = typedText.length();
+    if (key == BACKSPACE) {
+      if (mainLength > 0) {
+        String newText = typedText.substring(0, mainLength-1);// remove the last letter when backspace is pressed
+        typedText = newText;
+        mainLength--;
       }
-      if (key != CODED && key != BACKSPACE && key != ENTER) {
-        typedText += key;
-      } // only print if it is a letter/num
-      if (key == ENTER) {
-        // submit when enter is pressed
-
-        highScoresObj.saveScore(typedText.toUpperCase());
-        userTyping = false;
-      }
+    }
+    if (key != CODED && key != BACKSPACE && key != ENTER) {
+      // type a character if it isn't backspace/enter
+      typedText += key;
+    }
+    if (key == ENTER && hsIndex < 3) {
+      // submit when enter is pressed
+      HighScores currentHS = highScoresObjs.get(hsIndex);
+      currentHS.saveScore(typedText.toUpperCase());
+      userTyping = false;
     }
   }
 }
+
 
 void keyReleased() {
   if (cfgs[cfgIndex] == "multiplayer" && !menuOpen) {
@@ -101,11 +102,20 @@ void keyReleased() {
 }
 
 void switchcfg() {
-  if (cfgIndex+1 == cfgs.length) {
+
+  if (cfgIndex+1 == cfgs.length ) {
     cfgIndex = 0;
   } else {
     cfgIndex++;
   }
+  if (hsIndex+1 == highScoresObjs.size()) {
+    hsIndex = 0;
+  } else {
+    hsIndex++;
+  }
+  println("cfgIndex:", cfgIndex);
+  println("hsIndex:", hsIndex);
+
   setup();
 }
 

@@ -54,15 +54,15 @@ class Missile {
 
 
     if ( !playerMissile ) { // if it's an enemy missile, check for collision with fireballs. player missiles aren't affected by the fireballs
-      boolean missileSplitEnabled = cfg.getBoolean("missile_splitEnabled");
+      //boolean missileSplitEnabled = cfg.getBoolean("missile_splitEnabled");
       boolean missileCollideEnabled = cfg.getBoolean("missile_collideEnabled");
 
-      if ( missileSplitEnabled ) {
-        int missileSplitCutoff = cfg.getInt("missile_splitMissileCutoff"); // missiles won't split past a certain height above the floor
-        if ( missile_nose.y < height - floorHeight - missileSplitCutoff) {
-          checkSplitMissile(); // chance to split missile each frame
-        }
-      }
+      //if ( missileSplitEnabled ) {
+      //  int missileSplitCutoff = cfg.getInt("missile_splitMissileCutoff"); // missiles won't split past a certain height above the floor
+      //  //if ( missile_nose.y < height - floorHeight - missileSplitCutoff) {
+      //  //checkSplitMissile(); // chance to split missile each frame
+      //  //}
+      //}
 
       if ( missileCollideEnabled ) {
         for (int i = 0; i<fireballs.size(); i++) { // check collision with each fireball on the screen
@@ -73,23 +73,23 @@ class Missile {
     }
   }
 
-  void checkSplitMissile() {
+  //void checkSplitMissile() {
 
-    int splitDelay = 1000;
-    if ( millis() > splitTimer ) { // check to split enemies every x milliseconds
+  //  int splitDelay = 1000;
+  //  if ( millis() > splitTimer ) { // check to split enemies every x milliseconds
 
-      splitTimer += splitDelay; // reset split timer
+  //    splitTimer += splitDelay; // reset split timer
 
-      int chance = cfg.getInt("missile_splitMissileChance"); // get chance to split from cfg
-      int result = int(random(-10, chance)); // random chance to split the missile
+  //    int chance = cfg.getInt("missile_splitMissileChance"); // get chance to split from cfg
+  //    int result = int(random(-10, chance)); // random chance to split the missile
 
-      if (result < 0) {
-        result=1;
-        splitMissile();
-        killMissile();
-      }
-    }
-  }
+  //    if (result < 0) {
+  //      result=1;
+  //      splitMissile();
+  //      killMissile();
+  //    }
+  //  }
+  //}
 
   void splitMissile() {
     int splitCount = cfg.getInt("missile_splitMissileCount");

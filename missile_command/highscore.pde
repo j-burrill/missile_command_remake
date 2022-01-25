@@ -2,22 +2,25 @@ class HighScores { //<>// //<>//
   // object that holds methods related to the highscore system
 
   final int PODIUMCOUNT = 10;
+  String TARGETTXT;
 
   NamesAndScoresPair pair;
   String[] lines;
 
   // useless constructor
-  HighScores() {
+  HighScores(String type) {
+    TARGETTXT = type;
   }
 
   String[] readFile() {
-    String[] savedScores = loadStrings("data/txt/highscores.txt");
+    
+    String[] savedScores = loadStrings(TARGETTXT);
     return savedScores;
   }
 
   int getScore(int i) {
-    if (readFile().length < PODIUMCOUNT) {
-      return pair.scores[pair.scores.length-1];
+    if (readFile().length < i) {
+      return 0;
     }
     return pair.scores[i-1];
   }
@@ -59,9 +62,8 @@ class HighScores { //<>// //<>//
       //println("names[i]:", in.names[i]);
       //println("str:", str);
     }
-
-    output = createWriter("data/txt/highscores.txt");
-
+    output = createWriter(TARGETTXT);
+    
     // write each line in my array to the file
     for (int i = 0; i<lines.length; i++) {
       output.println(lines[i]);
@@ -83,7 +85,7 @@ class HighScores { //<>// //<>//
     // get my data from the file
     String[] savedScores = readFile();
     // make an array of scores and names that are connected with each other
-    HighScore[] lines = new HighScore[savedScores.length];
+    HighScore[] lines = new HighScore[savedScores.length]; // npe
 
     // for each item in my data...
     for ( int i = 0; i < savedScores.length; i++ ) {
@@ -103,8 +105,8 @@ class HighScores { //<>// //<>//
       lines[i] = currentLine;
     }
 
-    NamesAndScoresPair myarrays = highScoresObj.sortScores( lines );
-    highScoresObj.write(myarrays);
+    NamesAndScoresPair myarrays = sortScores( lines );
+    write(myarrays);
   }
 
   void saveScore(String userInitials) {

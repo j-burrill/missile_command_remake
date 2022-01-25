@@ -1,5 +1,5 @@
 void draw() {
-  
+
   background( backgroundColour );
   stroke(125, 83, 54);
   strokeWeight(0);
@@ -12,6 +12,7 @@ void draw() {
   boolean spawnPlanesEnabled = cfg.getBoolean("game_spawnPlanes");
 
   if ( spawnEnemiesEnabled && millis() > enemyMissileTimer && !menuOpen ) { // spawn enemies every x milliseconds if menu is closed
+
     //println("enemytimer ran out");
     int borderOffset = 80; // no missiles right on the edge of the screen
     // get random spawn and finish points for the missile
@@ -19,8 +20,10 @@ void draw() {
     Point spawn = new Point( int(random(0, width)), 0);
     Point finish = new Point( targetX, height );
     spawnEnemyMissile( spawn, finish, null );
-    int enemySpawnDelay = cfg.getInt("missile_enemySpawnDelay");
     // reset the spawn delay, only spawn missile every x milliseconds
+    if ( cfgs[cfgIndex] == "challenge" && enemySpawnDelay > 500 ) {
+      enemySpawnDelay -= 20;
+    }
     enemyMissileTimer = millis() + enemySpawnDelay; //1800
   }
 
@@ -48,8 +51,9 @@ void draw() {
     int bombX = int(random(300, width-300));
     Point spawnPoint = new Point(spawnX, spawnY);
     spawnPlane(spawnPoint, bombX, rightSideSpawn);
-    int planeSpawnDelay = cfg.getInt("plane_enemySpawnDelay");
-
+if ( cfgs[cfgIndex] == "challenge" && enemySpawnDelay > 500 ) {
+      enemySpawnDelay -= 20;
+    }
     enemyPlaneTimer = millis() + planeSpawnDelay; //1800
   }
 

@@ -1,5 +1,8 @@
 void drawMenu() {
-  String[] scores = highScoresObj.arrayPairToStr();
+
+  HighScores currentHS = highScoresObjs.get(hsIndex);
+  String[] scores = currentHS.arrayPairToStr();
+
 
   fill(255);
   textSize(30);
@@ -25,7 +28,7 @@ void drawMenu() {
     text(typePrompt, centreText(typePrompt), 420);
   } else {
 
-    if (topTenScore) {
+    if (topTenScore && hsIndex < 3) {
       text(topTenScoreText, centreText(topTenScoreText), height-floorHeight-90);
     }
 
@@ -34,27 +37,31 @@ void drawMenu() {
     text(tutorialtxt, centreText(tutorialtxt), topTextHeight + 60);
     text(menutxt, centreText(menutxt), topTextHeight + 120);
     textSize(20);
-    text(hscoretxt, centreText(hscoretxt), topTextHeight + 180);
     text(cfgtxt, 5, 22);
 
-    for (int i=0; i<scores.length; i++) {
-      if (i==10) {
-        break;
+    if ( hsIndex < 3 ) {
+      text(hscoretxt, centreText(hscoretxt), topTextHeight + 180);
+
+
+      for (int i=0; i<scores.length; i++) {
+        if (i==10) {
+          break;
+        }
+        color textColour = color(255);
+
+        // top three scores get gold, silver, bronze
+        if (i==0) {
+          textColour = color(255, 223, 0);
+        } else if (i==1) {
+          textColour = color(196, 202, 230);
+        } else if (i==2) {
+          textColour = color(176, 141, 87);
+        }
+
+        fill(textColour);
+
+        text(scores[i], centreText(scores[i]), topTextHeight + 210 + (i*30));
       }
-      color textColour = color(255);
-
-      // top three scores get gold, silver, bronze
-      if (i==0) {
-        textColour = color(255, 223, 0);
-      } else if (i==1) {
-        textColour = color(196, 202, 206);
-      } else if (i==2) {
-        textColour = color(176, 141, 87);
-      }
-
-      fill(textColour);
-
-      text(scores[i], centreText(scores[i]), topTextHeight + 210 + (i*30));
     }
   }
 }

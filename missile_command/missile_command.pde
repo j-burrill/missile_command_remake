@@ -21,17 +21,22 @@ ArrayList<Plane> planes = new ArrayList<Plane>();
 ArrayList<Score_text> texts = new ArrayList<Score_text>();
 ArrayList<Xhair> xhairs = new ArrayList<Xhair>();
 
+ArrayList<HighScores> highScoresObjs = new ArrayList<HighScores>();
 
 // create certain variables that need to be accessed globally
 
 
 // object that holds methods related to the highscore system, created so it can be accessed globally
-HighScores highScoresObj = new HighScores();
+HighScores highScoresObj = new HighScores("data/txt/highscores.txt");
+HighScores challengeHighScoresObj = new HighScores("data/txt/challengehighscores.txt");
+HighScores multiplayerHighScoresObj = new HighScores("data/txt/multiplayerhighscores.txt");
+HighScores blankHighScoresObj = new HighScores("data/txt/blank.txt");
+
 
 // some settings are written in a json file, object is created here
 JSONObject cfg;
-int cfgIndex = 0;
-String[] cfgs = {"default", "custom", "multiplayer", "challenge"};
+int cfgIndex, hsIndex;
+String[] cfgs = { "default", "multiplayer", "challenge", "custom" };
 
 Xhair redplayer;
 Xhair blueplayer;
@@ -46,6 +51,8 @@ color dirtColour, backgroundColour;
 color[] colourArray = new color[8];
 
 int menuUpdateDelay;
+int enemySpawnDelay, planeSpawnDelay;
+
 int currentMenuUpdateDelay = menuUpdateDelay;
 int menuIndex = 0;
 String menuText2;
@@ -58,7 +65,14 @@ String userInitials;
 
 
 void setup() {
-  highScoresObj.readAndSortScores();
+  highScoresObjs.clear();
+  highScoresObjs.add(highScoresObj);
+  highScoresObjs.add(challengeHighScoresObj);
+  highScoresObjs.add(multiplayerHighScoresObj);
+  highScoresObjs.add(blankHighScoresObj);
+  for (HighScores hs : highScoresObjs) {
+    hs.readAndSortScores();
+  }
 
   cannons.clear();
   // get settings from the json file
@@ -97,6 +111,9 @@ void loadcfg() {
   floorHeight = cfg.getInt("game_floorHeight");
   cannonCount = cfg.getInt("cannon_cannonCount");
   menuUpdateDelay = cfg.getInt("menu_textUpdateDelay");
+  enemySpawnDelay = cfg.getInt("missile_enemySpawnDelay");
+  planeSpawnDelay = cfg.getInt("plane_enemySpawnDelay");
+
 }
 
 
@@ -206,12 +223,36 @@ void startGame() {
 }
 
 void gameOver() {
-  highScoresObj.readAndSortScores();
+
   menuOpen = true;
-  if ( cfgs[cfgIndex] == "default" ) {
+
+  HighScores currentHS = highScoresObjs.get(hsIndex);
+  if (hsIndex<3) {
     userTyping = true;
   }
-  if ( cfgs[cfgIndex] == "default" && highScoresObj.checkHighScore( actualScore ) ) {
+  currentHS.readAndSortScores();
+  if (currentHS.checkHighScore( actualScore ) ) {
     topTenScore = true;
   }
+  //if ( cfgs[cfgIndex] == "default" ) {
+  //  userTyping = true;
+  //  highScoresObj.readAndSortScores();
+  //  if (highScoresObj.checkHighScore( actualScore ) ) {
+  //    topTenScore = true;
+  //  }
+  //}
+  //if ( cfgs[cfgIndex] == "challenge" ) {
+  //  userTyping = true;
+  //  challengeHighScoresObj.readAndSortScores();
+  //  if (challengeHighScoresObj.checkHighScore( actualScore ) ) {
+  //    topTenScore = true;
+  //  }
+  //}
+  //if ( cfgs[cfgIndex] == "multiplayer" ) {
+  //  userTyping = true;
+  //  multiplayerHighScoresObj.readAndSortScores();
+  //  if (multiplayerHighScoresObj.checkHighScore( actualScore ) ) {
+  //    topTenScore = true;
+  //  }
+  //}
 }
