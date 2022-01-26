@@ -27,7 +27,6 @@
 	"missile_enemy_fireBallSize": 80,
 	"missile_enemy_finishFireBallSize": 55,
 	"missile_enemy_scoreForDestroying": 100,
-	"missile_enemy_difficulty_scale": 0,
 	
 	"menu_textUpdateDelay": 40,
 	

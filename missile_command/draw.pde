@@ -51,8 +51,8 @@ void draw() {
     int bombX = int(random(300, width-300));
     Point spawnPoint = new Point(spawnX, spawnY);
     spawnPlane(spawnPoint, bombX, rightSideSpawn);
-if ( cfgs[cfgIndex] == "challenge" && enemySpawnDelay > 500 ) {
-      enemySpawnDelay -= 20;
+    if ( cfgs[cfgIndex] == "challenge" && planeSpawnDelay > 800 ) {
+      planeSpawnDelay -= 20;
     }
     enemyPlaneTimer = millis() + planeSpawnDelay; //1800
   }

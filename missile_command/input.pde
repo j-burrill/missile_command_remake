@@ -113,8 +113,6 @@ void switchcfg() {
   } else {
     hsIndex++;
   }
-  println("cfgIndex:", cfgIndex);
-  println("hsIndex:", hsIndex);
 
   setup();
 }

@@ -32,7 +32,6 @@
 	
 	"fireball_lifetimeDivider": 55,
 	"fireball_enableColourFlash": true,
-	"fireball_colourFlashFrameDelay": 3,
 	
 	"reticle_enableColourFlash": true,
 	"reticle_colourFlashFrameDelay": 3,

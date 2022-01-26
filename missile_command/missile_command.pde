@@ -25,12 +25,13 @@ ArrayList<HighScores> highScoresObjs = new ArrayList<HighScores>();
 
 // create certain variables that need to be accessed globally
 
+color dirtColour, backgroundColour;
 
 // object that holds methods related to the highscore system, created so it can be accessed globally
-HighScores highScoresObj = new HighScores("data/txt/highscores.txt");
-HighScores challengeHighScoresObj = new HighScores("data/txt/challengehighscores.txt");
-HighScores multiplayerHighScoresObj = new HighScores("data/txt/multiplayerhighscores.txt");
-HighScores blankHighScoresObj = new HighScores("data/txt/blank.txt");
+HighScores highScoresObj = new HighScores("data/txt/highscores.txt", "data/txt/instructions/default.txt");
+HighScores challengeHighScoresObj = new HighScores("data/txt/challengehighscores.txt", "data/txt/instructions/challenge.txt");
+HighScores multiplayerHighScoresObj = new HighScores("data/txt/multiplayerhighscores.txt", "data/txt/instructions/multiplayer.txt");
+HighScores blankHighScoresObj = new HighScores("data/txt/blank.txt", "data/txt/blank.txt");
 
 
 // some settings are written in a json file, object is created here
@@ -47,7 +48,7 @@ boolean menuOpen = true;
 int actualScore, highscore;
 int displayScore = 0;
 
-color dirtColour, backgroundColour;
+
 color[] colourArray = new color[8];
 
 int menuUpdateDelay;
@@ -65,24 +66,28 @@ String userInitials;
 
 
 void setup() {
+  // size of the window
+  size(800, 800);
+  
+  resetScreen();
+  
+  dirtColour = color(125, 83, 54);
+  backgroundColour = color(0);
+  
   highScoresObjs.clear();
   highScoresObjs.add(highScoresObj);
-  highScoresObjs.add(challengeHighScoresObj);
   highScoresObjs.add(multiplayerHighScoresObj);
+  highScoresObjs.add(challengeHighScoresObj);
   highScoresObjs.add(blankHighScoresObj);
+  
   for (HighScores hs : highScoresObjs) {
     hs.readAndSortScores();
   }
 
   cannons.clear();
+  
   // get settings from the json file
   loadcfg();
-
-  backgroundColour = color(0); // (0)
-  dirtColour = color(125, 83, 54); // (color(125, 83, 54)
-
-  // size of the window
-  size(800, 800);
 
   // make my cannons
   for (int i = 0; i < cannonCount; i++) {
@@ -113,7 +118,6 @@ void loadcfg() {
   menuUpdateDelay = cfg.getInt("menu_textUpdateDelay");
   enemySpawnDelay = cfg.getInt("missile_enemySpawnDelay");
   planeSpawnDelay = cfg.getInt("plane_enemySpawnDelay");
-
 }
 
 
@@ -206,6 +210,11 @@ color getColour(int index) {
 }
 
 void startGame() {
+  
+  if (cfgs[cfgIndex] == "multiplayer") {
+    setupMultiplayer();
+  }
+  
   menuOpen = false; // close menu
   topTenScore = false;
   actualScore = 0;
@@ -234,25 +243,6 @@ void gameOver() {
   if (currentHS.checkHighScore( actualScore ) ) {
     topTenScore = true;
   }
-  //if ( cfgs[cfgIndex] == "default" ) {
-  //  userTyping = true;
-  //  highScoresObj.readAndSortScores();
-  //  if (highScoresObj.checkHighScore( actualScore ) ) {
-  //    topTenScore = true;
-  //  }
-  //}
-  //if ( cfgs[cfgIndex] == "challenge" ) {
-  //  userTyping = true;
-  //  challengeHighScoresObj.readAndSortScores();
-  //  if (challengeHighScoresObj.checkHighScore( actualScore ) ) {
-  //    topTenScore = true;
-  //  }
-  //}
-  //if ( cfgs[cfgIndex] == "multiplayer" ) {
-  //  userTyping = true;
-  //  multiplayerHighScoresObj.readAndSortScores();
-  //  if (multiplayerHighScoresObj.checkHighScore( actualScore ) ) {
-  //    topTenScore = true;
-  //  }
-  //}
+  enemySpawnDelay = cfg.getInt("missile_enemySpawnDelay");
+  planeSpawnDelay = cfg.getInt("plane_enemySpawnDelay");
 }

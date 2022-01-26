@@ -3,19 +3,27 @@ class HighScores { //<>// //<>//
 
   final int PODIUMCOUNT = 10;
   String TARGETTXT;
+  String TARGETTUTORIAL;
+  String[] instructions;
+
 
   NamesAndScoresPair pair;
   String[] lines;
 
   // useless constructor
-  HighScores(String type) {
+  HighScores(String type, String inst) {
     TARGETTXT = type;
+    TARGETTUTORIAL = inst;
   }
 
   String[] readFile() {
-    
     String[] savedScores = loadStrings(TARGETTXT);
+    instructions = loadStrings(TARGETTUTORIAL);
+
     return savedScores;
+  }
+
+  void loadInst(String inst) {
   }
 
   int getScore(int i) {
@@ -63,7 +71,7 @@ class HighScores { //<>// //<>//
       //println("str:", str);
     }
     output = createWriter(TARGETTXT);
-    
+
     // write each line in my array to the file
     for (int i = 0; i<lines.length; i++) {
       output.println(lines[i]);
@@ -117,6 +125,12 @@ class HighScores { //<>// //<>//
     write(pair);
     // sort and update my lists
     readAndSortScores();
+  }
+
+  void drawMenuInstructions(int y) {
+    for (int i = 0; i < instructions.length; i++ ) {
+      text(instructions[i], centreText(instructions[i]), y + i*40);
+    }
   }
 
   boolean checkHighScore( int newScore ) {

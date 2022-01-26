@@ -10,7 +10,6 @@ void drawMenu() {
   // all the text on my menu
   String scoretxt = "Score: " + actualScore;
   String hscoretxt = "Highscores:";
-  String tutorialtxt = "Use number keys or home row keys to fire your missiles.";
   String menutxt = "Press space to start" + menuTxt2();
   String cfgtxt = "Current config (TAB): " + cfgs[cfgIndex] + " ("+(cfgIndex+1)+"/"+cfgs.length+")";
   String topTenScoreText = "You got a score in the top ten!";
@@ -32,10 +31,10 @@ void drawMenu() {
       text(topTenScoreText, centreText(topTenScoreText), height-floorHeight-90);
     }
 
-
+    currentHS.drawMenuInstructions(90);
     text(scoretxt, centreText(scoretxt), height-floorHeight-60);
-    text(tutorialtxt, centreText(tutorialtxt), topTextHeight + 60);
     text(menutxt, centreText(menutxt), topTextHeight + 120);
+    
     textSize(20);
     text(cfgtxt, 5, 22);
 

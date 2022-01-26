@@ -1,0 +1,2 @@
+RED: WASD to move, SHIFT to shoot.
+BLUE: arrows to move, CTRL to shoot.
