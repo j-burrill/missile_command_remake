@@ -32,6 +32,7 @@ void drawMenu() {
     }
 
     currentHS.drawMenuInstructions(90);
+    
     text(scoretxt, centreText(scoretxt), height-floorHeight-60);
     text(menutxt, centreText(menutxt), topTextHeight + 120);
     
