@@ -50,7 +50,7 @@ void keyPressed() {
   if (userTyping) {
     // code reused from my license plate generator
     int mainLength = typedText.length();
-    if (key == BACKSPACE) {
+    if (key == BACKSPACE && key != ' ') {
       if (mainLength > 0) {
         String newText = typedText.substring(0, mainLength-1);// remove the last letter when backspace is pressed
         typedText = newText;
